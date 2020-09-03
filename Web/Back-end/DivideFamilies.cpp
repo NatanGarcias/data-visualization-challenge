@@ -7,6 +7,7 @@
 #include <set>
 
 #define DatasetDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesStructure.csv"
+#define OutputDirectory "/home/geflx/github/data-visualization-challenge/Web/Back-end/Family_JSON/"
 #define MAX_GENERATIONS 1000
 
 struct Person{
@@ -129,7 +130,8 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 	for(int i = 0; i < dataset.size(); i++){
 
 		// Create output file.
-		std::string outStr = "Family_" + std::to_string(i+1) + ".txt";
+		std::string outDir = OutputDirectory;
+		std::string outStr = outDir + "Family_" + std::to_string(i+1) + ".txt";
 		std::ofstream outFile(outStr);
 
 		// Map marriage edges, manage people outside family/first generation and map suicides.
@@ -172,7 +174,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 						outFile << "\"spouse_suicide\":\"no\", ";
 					printed.insert(spouse);
 				}
-				outFile << "\"sex\":\"M\"}, ";
+				outFile << "\"sex\":\"M\"},\n";
 				printed.insert(dataset[i].vec[j].ID);
 				printed.insert(spouse);
 			}			
@@ -232,7 +234,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 							outFile << "yes";
 						else
 							outFile << "no";
-						outFile << "\"},";
+						outFile << "\"},\n";
 
 						printed.insert(dataset[i].vec[j].ID);
 					}
@@ -241,6 +243,12 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 		}
 
 		std::cout << "POSITIONS: " << dataset[i].vec.size() << " PRINTED: " << printed.size() << "\n";
+		for(int j = 0; j < dataset[i].vec.size(); j++){
+			if(printed.find(dataset[i].vec[j].ID) == printed.end()){
+				std::cout << "Not printed: " << dataset[i].vec[j].ID << ", father: " << dataset[i].vec[j].fatherID << " mother: " << dataset[i].vec[j].motherID << " gen: " << dataset[i].vec[j].gen << "\n";
+			}
+		}
+		std::cout << "\n\n\n";
 		outFile.close();
 	}
 }
@@ -254,6 +262,7 @@ int main(){
 
 	readDataset(fields, dataset, mapFamily, c_mapFamily);
 	
-	printDatasetRaw(dataset);
+	//printDatasetRaw(dataset);
+
 	printFamilyFiles(dataset);
 }

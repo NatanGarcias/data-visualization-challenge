@@ -39,18 +39,98 @@
 <body>
 	<script>
 		var svg = d3.select("body").append("svg")
-					.attr("width", 10000).attr("height", 10000) // Page sizes.
+					.attr("width", 4000).attr("height", 1000) // Page sizes.
 					.append("g").attr("transform", "translate(50, 50)");
 
 		// Insert code to import and parse CSV file here.
-		var data = [{"child":"36153", "parent":"", "spouse":"36152", "spouse_suicide":"no", "sex":"M"}, {"child":"36151", "parent":"36153","spouse": "36150", "spouse_suicide": "no","suicide":"no"},{"child":"67079", "parent":"36153","spouse": "67080", "spouse_suicide": "no","suicide":"no"},{"child":"1689", "parent":"36153","spouse": "1688", "spouse_suicide": "no","suicide":"no"},{"child":"28453", "parent":"36153","spouse": "28454", "spouse_suicide": "no","suicide":"no"},{"child":"62883", "parent":"36153","spouse": "62884", "spouse_suicide": "no","suicide":"no"},{"child":"42470", "parent":"36153","spouse": "42471", "spouse_suicide": "no","suicide":"no"},{"child":"63554", "parent":"36153","spouse": "63553", "spouse_suicide": "no","suicide":"no"},{"child":"21773", "parent":"36153","spouse": "21775", "spouse_suicide": "no","suicide":"no"},{"child":"21809", "parent":"36153","spouse": "21810", "spouse_suicide": "no","suicide":"no"},{"child":"31660", "parent":"21773","spouse": "31659", "spouse_suicide": "no","suicide":"no"},{"child":"36156", "parent":"36151","spouse": "36157", "spouse_suicide": "no","suicide":"no"},{"child":"62334", "parent":"63554","spouse": "62331", "spouse_suicide": "no","suicide":"no"},{"child":"67085", "parent":"67079","spouse": "67087", "spouse_suicide": "no","suicide":"no"},{"child":"67093", "parent":"67079","spouse": "67094", "spouse_suicide": "no","suicide":"no"},{"child":"1690", "parent":"1689","spouse": "1691", "spouse_suicide": "no","suicide":"no"},{"child":"5806", "parent":"21809","spouse": "5805", "spouse_suicide": "no","suicide":"no"},{"child":"60624", "parent":"42470","spouse": "60623", "spouse_suicide": "no","suicide":"no"},{"child":"6638", "parent":"21809","spouse": "6639", "spouse_suicide": "no","suicide":"no"},{"child":"65522", "parent":"62883","spouse": "65524", "spouse_suicide": "no","suicide":"no"},{"child":"17892", "parent":"63554","spouse": "17891", "spouse_suicide": "no","suicide":"no"},{"child":"5654", "parent":"1689","spouse": "5655", "spouse_suicide": "no","suicide":"no"},{"child":"26428", "parent":"28453","spouse": "26429", "spouse_suicide": "no","suicide":"no"}
+		var data = [{"child":"5", "parent":"", "spouse":"17", "spouse_suicide":"no", "sex":"M"},
+					{"child":"30", "parent":"5","spouse": "31", "spouse_suicide": "no","suicide":"no"},
+					{"child":"32", "parent":"5","spouse": "34", "spouse_suicide": "no","suicide":"no"},
+					{"child":"35", "parent":"5","spouse": "37", "spouse_suicide": "no","suicide":"no"},
+					{"child":"46702", "parent":"30","spouse": "46701", "spouse_suicide": "no","suicide":"no"},
+					{"child":"62887", "parent":"30","spouse": "62888", "spouse_suicide": "no","suicide":"no"},
+					{"child":"39510", "parent":"30","spouse": "39509", "spouse_suicide": "no","suicide":"no"},
+					{"child":"23087", "parent":"35","spouse": "23088", "spouse_suicide": "no","suicide":"no"},
+					{"child":"18323", "parent":"30","spouse": "18322", "spouse_suicide": "no","suicide":"no"},
+					{"child":"66557", "parent":"32","spouse": "66556", "spouse_suicide": "no","suicide":"no"},
+					{"child":"28375", "parent":"32","spouse": "705", "spouse_suicide": "no","suicide":"no"},
+					{"child":"46707", "parent":"46702","spouse": "46708", "spouse_suicide": "no","suicide":"no"},
+					{"child":"46709", "parent":"46702","spouse": "46710", "spouse_suicide": "no","suicide":"no"},
+					{"child":"62892", "parent":"62887","spouse": "62893", "spouse_suicide": "no","suicide":"no"},
+					{"child":"62900", "parent":"62887","spouse": "62901", "spouse_suicide": "no","suicide":"no"},
+					{"child":"15363", "parent":"39510","spouse": "15362", "spouse_suicide": "no","suicide":"no"},
+					{"child":"11575", "parent":"23087","spouse": "11574", "spouse_suicide": "no","suicide":"no"},
+					{"child":"20659", "parent":"18323","spouse": "5849", "spouse_suicide": "no","suicide":"no"},
+					{"child":"53798", "parent":"66557","spouse": "53797", "spouse_suicide": "no","suicide":"no"},
+					{"child":"7435", "parent":"62887","spouse": "7438", "spouse_suicide": "no","suicide":"no"},
+					{"child":"39657", "parent":"28375","spouse": "34847", "spouse_suicide": "no","suicide":"no"},
+					{"child":"61047", "parent":"66557","spouse": "22124", "spouse_suicide": "no","suicide":"no"},
+					{"child":"39514", "parent":"15363","spouse": "39515", "spouse_suicide": "no","suicide":"no"},
+					{"child":"39525", "parent":"15363","spouse": "24460", "spouse_suicide": "no","suicide":"no"},
+					{"child":"51000", "parent":"20659","spouse": "16931", "spouse_suicide": "no","suicide":"no"},
+					{"child":"66559", "parent":"53798","suicide":"no"},
+					{"child":"66560", "parent":"53798","suicide":"no"},
+					{"child":"66561", "parent":"53798","spouse": "65051", "spouse_suicide": "no","suicide":"yes"},
+					{"child":"777", "parent":"11575","spouse": "778", "spouse_suicide": "no","suicide":"no"},
+					{"child":"47326", "parent":"61047","suicide":"no"},
+					{"child":"43391", "parent":"7435","suicide":"no"},
+					{"child":"60065", "parent":"62900","suicide":"yes"},
+					{"child":"21769", "parent":"46707","spouse": "21770", "spouse_suicide": "no","suicide":"no"},
+					{"child":"25707", "parent":"7435","suicide":"no"},
+					{"child":"66856", "parent":"46709","spouse": "16011", "spouse_suicide": "no","suicide":"no"},
+					{"child":"37543", "parent":"62892","spouse": "37542", "spouse_suicide": "no","suicide":"no"},
+					{"child":"54490", "parent":"39657","suicide":"yes"},
+					{"child":"12307", "parent":"62900","suicide":"no"},
+					{"child":"55993", "parent":"62900","suicide":"no"},
+					{"child":"53751", "parent":"62900","suicide":"no"},
+					{"child":"27839", "parent":"62900","suicide":"no"},
+					{"child":"23609", "parent":"62900","suicide":"no"},
+					{"child":"61046", "parent":"61047","spouse": "24070", "spouse_suicide": "no","suicide":"yes"},
+					{"child":"51157", "parent":"7435","suicide":"no"},
+					{"child":"51179", "parent":"7435","suicide":"yes"},
+					{"child":"781", "parent":"777","suicide":"no"},
+					{"child":"784", "parent":"777","suicide":"no"},
+					{"child":"65467", "parent":"39514","spouse": "44856", "spouse_suicide": "no","suicide":"no"},
+					{"child":"5444", "parent":"777","suicide":"no"},
+					{"child":"44860", "parent":"39525","suicide":"no"},
+					{"child":"56604", "parent":"777","suicide":"yes"},
+					{"child":"21768", "parent":"21769","suicide":"no"},
+					{"child":"4033", "parent":"66561","suicide":"no"},
+					{"child":"24459", "parent":"39525","suicide":"yes"},
+					{"child":"15409", "parent":"39525","suicide":"no"},
+					{"child":"41582", "parent":"66561","suicide":"no"},
+					{"child":"66855", "parent":"66856","spouse": "1629", "spouse_suicide": "no","suicide":"no"},
+					{"child":"40542", "parent":"37543","suicide":"no"},
+					{"child":"37541", "parent":"37543","suicide":"yes"},
+					{"child":"40787", "parent":"51000","spouse": "42258", "spouse_suicide": "yes","suicide":"no"},
+					{"child":"3388", "parent":"66856","suicide":"no"},
+					{"child":"9348", "parent":"61046","suicide":"no"},
+					{"child":"49225", "parent":"21769","spouse": "35224", "spouse_suicide": "no","suicide":"yes"},
+					{"child":"3558", "parent":"37543","suicide":"no"},
+					{"child":"1073", "parent":"61046","suicide":"no"},
+					{"child":"44854", "parent":"65467","suicide":"no"},
+					{"child":"40986", "parent":"65467","suicide":"no"},
+					{"child":"21697", "parent":"65467","suicide":"yes"},
+					{"child":"10252", "parent":"65467","suicide":"no"},
+					{"child":"40786", "parent":"40787","suicide":"no"},
+					{"child":"59289", "parent":"65467","suicide":"no"},
+					{"child":"42257", "parent":"40787","suicide":"yes"},
+					{"child":"16807", "parent":"40787","suicide":"no"},
+					{"child":"17565", "parent":"40787","suicide":"no"},
+					{"child":"59713", "parent":"40787","suicide":"no"},
+					{"child":"49223", "parent":"49225","suicide":"no"},
+					{"child":"30603", "parent":"49225","suicide":"no"},
+					{"child":"16256", "parent":"66855","suicide":"no"},
+					{"child":"61306", "parent":"49225","suicide":"no"},
+					{"child":"1386", "parent":"49225","suicide":"no"},
+					{"child":"67960", "parent":"66855","suicide":"no"},
 					];
 
 	var dataStructure = d3.stratify()
 			     .id(function(d){return d.child;})
 			     .parentId(function(d){return d.parent;})(data);
 
-        var treeStructure = d3.tree().size([4000,1300]);
+        var treeStructure = d3.tree().size([2000,500]);
         var information = treeStructure(dataStructure);
         console.log(information.descendants());
 
