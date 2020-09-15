@@ -140,6 +140,9 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 		std::set<int> suicided;
 		std::set<int> printed;
 
+		std::set<int> printedFixed;
+		std::set<int> printedAsSpouse;
+
 		for(int j = 0; j < dataset[i].vec.size(); j++){
 			if(dataset[i].vec[j].fatherID != -1 && dataset[i].vec[j].motherID != -1){
 				marriage[dataset[i].vec[j].fatherID] = dataset[i].vec[j].motherID;
@@ -161,7 +164,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 
 		// Print outsiders/family from first generation. Men will be root in this generation.
 		for(int j = 0; j < dataset[i].vec.size(); j++){
-			if(dataset[i].vec[j].gen == 1 && dataset[i].vec[j].sex == 'M'){
+			if(dataset[i].vec[j].gen == 1 && dataset[i].vec[j].sex == 'F'){
 				outFile << "{\"child\":\"" << dataset[i].vec[j].ID << "\", \"parent\":\"\", \"spouse\":";
 				
 				// Print spouse and if spouse suicided.
@@ -174,9 +177,11 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 						outFile << "\"spouse_suicide\":\"no\", ";
 					printed.insert(spouse);
 				}
-				outFile << "\"sex\":\"M\"},\n";
+				outFile << "\"sex\":\"F\"},\n";
 				printed.insert(dataset[i].vec[j].ID);
 				printed.insert(spouse);
+				printedFixed.insert(dataset[i].vec[j].ID);
+				printedAsSpouse.insert(spouse);
 			}			
 		}
 
@@ -189,6 +194,15 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 					if(outsiders.find(dataset[i].vec[j].ID) == outsiders.end()){
 						outFile << "{\"child\":\"" << dataset[i].vec[j].ID << "\",";
 						
+						if(printedFixed.find(dataset[i].vec[j].fatherID) != printedFixed.end()){
+								outFile << " \"parent\":\""<< dataset[i].vec[j].fatherID << "\",";
+						}else if(printedFixed.find(dataset[i].vec[j].motherID) != printedFixed.end()){
+								outFile << " \"parent\":\""<< dataset[i].vec[j].motherID << "\",";
+						}else{
+							std::cout << "Parents weren't printed in tree. Aborting ... ";
+							exit(0);
+						}
+						/*
 						// The D3's parent field will have a non-outsider parent.
 						bool father_is_outsider = outsiders.find(dataset[i].vec[j].fatherID) == outsiders.end() ? false : true;
 						bool mother_is_outsider = outsiders.find(dataset[i].vec[j].motherID) == outsiders.end() ? false : true;
@@ -213,7 +227,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 						}else{
 							std::cout << "Unusual error. Aborting.\n";
 							std::cout << "\n\n";
-						}
+						}	*/
 
 						// Print spouse information if married.
 						if(marriage[dataset[i].vec[j].ID] != 0){
@@ -226,6 +240,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 								outFile << "no";
 							outFile << "\",";
 							printed.insert(spouse);
+							printedAsSpouse.insert(spouse);
 						}
 
 						// Printing suicide info.
@@ -237,6 +252,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 						outFile << "\"},\n";
 
 						printed.insert(dataset[i].vec[j].ID);
+						printedFixed.insert(dataset[i].vec[j].ID);
 					}
 				}
 			}

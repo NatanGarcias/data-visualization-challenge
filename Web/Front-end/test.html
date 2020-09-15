@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Family Tree</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        path{
+            fill: none;
+            stroke: gray;
+            stroke-width: 1.5;
+        }
+        text{
+            dominant-baseline: middle;
+            text-anchor: middle;
+        }
+        .bigger{
+            font-size: 14px;
+        }
+        #details
+        {
+            position: absolute;
+            left: 320px;
+            top: 120px;
+            width: 200px;
+            height: 50px;
+            background: gray;
+            color: black;
+            visibility: hidden;
+            border-radius: 15px;
+            text-align: center;
+            padding: 15px;
+            font-size: 20px;
+        }
+        .hide{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <select id="familyComboBox" onchange="myFunction()">
+        <option value=""></option>
+        <option value="1">One   (small)</option>
+        <option value="2">Two   (small)</option>
+        <option value="3">Three (very big)</option>
+        <option value="4">Four  (very small)</option>
+        <option value="5">Five  (big)</option>
+        <option value="6">Six   (very big)</option>
+        <option value="7">Seven (medium)</option>
+        <option value="8">Eight (small)</option>
+        <option value="9">Nine  (very small)</option>
+    </select>
+    
+    <!--<input id="submitButton" type="button" onclick="myFunction()" value="Submit form">!-->
+    
+    <script>
+    
+        // Tentativas de pegar o Value do combo_box:
+    
+        var selectedFamily = document.getElementById("familyComboBox");
+        console.log("selected: " + selectedFamily.value);
+
+        function myFunction() {
+            
+            var selected = document.getElementById("familyComboBox");
+            var test = selected.options[selected.selectedIndex].value;
+            console.log(test);
+            //não sei se vai dar certo
+        }
+
+
+        // Restante do código, carrega dados, printa árvore etc...;
+
+        var svg = d3.select("body").append("svg")
+                    .attr("width", 2000).attr("height", 1000) // Page sizes.
+                    .append("g").attr("transform", "translate(50, 50)");
+
+        // Insert code to import and parse CSV file here.
+        var data = [{"child":"61318", "parent":"", "spouse":"61319", "spouse_suicide":"no", "sex":"F"},
+{"child":"47087", "parent":"61318","spouse": "47083", "spouse_suicide": "no","suicide":"no"},
+{"child":"53386", "parent":"61318","spouse": "53387", "spouse_suicide": "no","suicide":"no"},
+{"child":"62036", "parent":"47087","spouse": "62034", "spouse_suicide": "no","suicide":"no"},
+{"child":"67006", "parent":"47087","spouse": "67004", "spouse_suicide": "no","suicide":"no"},
+{"child":"9278", "parent":"53386","spouse": "67703", "spouse_suicide": "no","suicide":"no"},
+{"child":"18524", "parent":"62036","suicide":"no"},
+{"child":"65491", "parent":"62036","suicide":"no"},
+{"child":"24277", "parent":"62036","spouse": "24276", "spouse_suicide": "no","suicide":"no"},
+{"child":"54564", "parent":"67006","spouse": "54563", "spouse_suicide": "no","suicide":"no"},
+{"child":"65130", "parent":"62036","spouse": "65129", "spouse_suicide": "no","suicide":"yes"},
+{"child":"4547", "parent":"62036","suicide":"no"}
+                    ];
+
+    var dataStructure = d3.stratify()
+                 .id(function(d){return d.child;})
+                 .parentId(function(d){return d.parent;})(data);
+
+        var treeStructure = d3.tree().size([2000,500]);
+        var information = treeStructure(dataStructure);
+        console.log(information.descendants());
+
+        // Connection lines.
+        var connections = svg.append("g").selectAll("path")
+                            .data(information.links());
+        connections.enter().append("path")
+                           .attr("d", function(d){
+                return "M" + (d.source.x) + "," + d.source.y + " C " + 
+                d.source.x + "," + (d.source.y + d.target.y)/2 + " " +
+                d.target.x + "," + (d.source.y + d.target.y)/2 + " " +
+                d.target.x + "," + d.target.y;
+                 });
+
+        // Family member's node.
+        var nodes = svg.append("g").selectAll("circle").data(information.descendants());
+        nodes.enter().append("circle")
+            .attr("cx", function(d){return d.x;})
+            .attr("cy", function(d){return d.y;})
+            .attr("r", 10)
+            .attr("fill", function(d){
+                if(d.data.suicide != undefined &&
+                    d.data.suicide == "yes")
+                    return "red"
+                else 
+                    return "gray";
+            })
+
+                // ! Implementing feature: show suicide's details on mouse overlay.
+
+            .on("mouseover", function(d){
+                 console.log("a");
+                // d3.select("#details").style("visibility", "visible")
+                //   .html(function(){
+                //      return "Sex: " + d.data.sex; //+ "\n" +
+                //             // "Dead? " + d.data.deceased + "\n" +
+                //             // "Age: " + d.data.age + "\n" +
+                //             // "B_date: " + d.data.bdate + "\n" +
+                //             // "D_date: " + d.data.ddate + "\n" +
+                //             // "GEN: " + d.data.gen + "\n";
+                //   });
+            })
+            .on("mouseout", function(){
+                console.log("b");
+                // d3.select("#details").style("visibility", "hidden");
+            });;
+
+        // Spouse nodes.
+        var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
+        spouseNodes.enter().append("circle")
+            .attr("cx", function(d){return d.x + 30;})
+            .attr("cy", function(d){return d.y;})
+            .attr("r", 10)
+            .classed("hide", function(d){
+                if(d.data.spouse == undefined)
+                    return true;
+                else
+                    return false;
+            })
+            .attr("fill", function(d){
+                if(d.data.spouse != undefined &&
+                    d.data.spouse_suicide == "yes")
+                    return "red"
+                else 
+                    return "black";
+            });
+
+        // Family members names.
+        var names = svg.append("g").selectAll("text").data(information.descendants());
+        names.enter().append("text")
+                    .text(function(d){return d.data.child;})
+                    .attr("x", function(d){return d.x - 0;})
+                    .attr("y", function(d){return d.y - 15;})
+                    .classed("bigger", true);
+
+        // Spouses names.
+        var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
+        spouseNames.enter().append("text")
+            .text(function(d){return d.data.spouse;})
+            .attr("x", function(d){return d.x + 30;})
+            .attr("y", function(d){return d.y + 25;})
+            .classed("bigger", true);
+
+    </script>
+</body>
+</html>
