@@ -1,0 +1,14 @@
+#Links
+
+Tutorial d3.js: https://github.com/d3/d3/wiki
+
+Leitura de arquivos d3.js: http://learnjsdata.com/read_data.html
+
+#Instalação 
+
+npm install -g http-server
+
+To run:
+http-server & 
+
+This will start the server on http://localhost:8080 from the current working directory.

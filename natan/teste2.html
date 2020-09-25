@@ -1,0 +1,25 @@
+<html>
+<head>
+    <title>Não Desista</title>
+</head>
+<body>
+<h3>Só Borahhh</h3>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<script>
+   
+    d3.csv("/data/cities.csv", function(d) {
+        return {
+            city : d.city,
+            state : d.state,
+            population : +d.population,
+            land_area : +d["land area"]
+            };
+        }).then(function(data) {
+        console.log(data[0]);
+    });
+    
+</script>
+
+</body>
+</html>
