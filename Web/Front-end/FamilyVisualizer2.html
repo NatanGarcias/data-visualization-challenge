@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Family Tree</title>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<style>
+        .header {
+          padding: 10px;
+          text-align: center;
+          background: #1abc9c;
+          color: white;
+          font-size: 15px;
+        }
+        .tooltip-inner{
+		    white-space: pre-line; 
+        }
+		path{
+			fill: none;
+			stroke: gray;
+			stroke-width: 1.5;
+		}
+		text{
+			dominant-baseline: middle;
+			text-anchor: middle;
+		}
+		.bigger{
+			font-size: 14px;
+		}
+		#details
+		{
+			position: absolute;
+			left: 320px;
+			top: 120px;
+			width: 200px;
+			height: 50px;
+			background: gray;
+			color: black;
+			visibility: hidden;
+			border-radius: 15px;
+			text-align: center;
+			padding: 15px;
+			font-size: 20px;
+		}
+		.hide{
+			visibility: hidden;
+		}
+
+	</style>
+</head>
+<body>
+    <div class="header">
+        <b>Select family:</b> 
+        <select id="familyComboBox">
+            <option value=""></option>
+            <option value="1">One   (small)</option>
+            <option value="2">Two   (small)</option>
+            <option value="3">Three (very big)</option>
+            <option value="4">Four  (very small)</option>
+            <option value="5">Five  (big)</option>
+            <option value="6">Six   (very big)</option>
+            <option value="7">Seven (medium)</option>
+            <option value="8">Eight (small)</option>
+            <option value="9">Nine  (very small)</option>
+        </select>
+        
+        
+    </div>  
+    
+        <table>
+          <tr>
+            <th>Filters</th>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbNotSuicided" checked="checked"> Not suicided</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbDepression" checked="checked"> Depression</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbEating" checked="checked"> Eating</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbAlcohol" checked="checked"> Alcohol</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbSomaticDisorder" checked="checked"> Somatic disorder</td>
+          </tr> 
+          <tr>
+            <td><input type="checkbox" id="cbObesity" checked="checked"> Obesity</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbPsychosis" checked="checked"> Psychosis</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbBipolar" checked="checked"> Bipolar spec. illness</td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbTrauma" checked="checked"> Interpersonal trauma</td>
+          </tr>
+        </table>
+	<script>
+
+        d3.select("#familyComboBox").on("change",update);
+
+        var print = 0;
+
+           // Insert code to import and parse CSV file here.
+        var data = [];
+        var svg;
+
+		var selectedFamily = "";
+
+        function update() {
+        	var tmp = document.getElementById("familyComboBox");
+  			var selectedFamily = tmp.options[tmp.selectedIndex].value;
+  			console.log(selectedFamily);
+        
+            if(print > 0){
+                svg.selectAll('*').remove();
+            }else{
+                svg = d3.select("body").append("svg")
+                        .attr("width", 6000).attr("height", 2000) // Page sizes.
+                        .append("g").attr("transform", "translate(0, 50)");
+            }
+    
+            if(selectedFamily != 0)
+                print++;
+
+
+            var datasetDirectory = "";
+
+            if(selectedFamily == 0){
+                data = [];
+            }else if(selectedFamily == 1){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 2){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 3){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 4){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 5){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 6){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 7){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 8){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }else if(selectedFamily == 9){
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+            }
+
+              
+			
+			d3.json(datasetDirectory).then(function(data){
+
+                // D3 Tree...
+                var dataStructure = d3.stratify()
+                    .id(function(d) {
+                        return d.child;
+                    })
+                    .parentId(function(d) {
+                        return d.parent;
+                    })(data);
+
+                // Resizing tree accordingly to data volume.
+                var treeStructure;
+                if (selectedFamily == 1) {
+                    treeStructure = d3.tree().size([2100, 650]);
+                } else if (selectedFamily == 2) {
+                    treeStructure = d3.tree().size([2000, 700]);
+                } else if (selectedFamily == 3) {
+                    treeStructure = d3.tree().size([7000, 1100]);
+
+                } else if (selectedFamily == 4) {
+
+                } else if (selectedFamily == 5) {
+
+                } else if (selectedFamily == 6) {
+
+                } else if (selectedFamily == 7) {
+
+                } else if (selectedFamily == 8) {
+
+                } else if (selectedFamily == 9) {
+
+                }
+
+                // D3 Tree...
+                var information = treeStructure(dataStructure);
+                console.log(information.descendants());
+
+                // Connection lines.
+                var connections = svg.append("g").selectAll("path")
+                    .data(information.links());
+                connections.enter().append("path")
+                    .attr("d", function(d) {
+                        return "M" + (d.source.x) + "," + d.source.y + " C " +
+                            d.source.x + "," + (d.source.y + d.target.y) / 2 + " " +
+                            d.target.x + "," + (d.source.y + d.target.y) / 2 + " " +
+                            d.target.x + "," + d.target.y;
+                    });
+
+                // Show dialogue text on mouse overlay.
+                var tooltip = d3.select("body")
+                    .append("div")
+                    .attr("class", "tooltip-inner") 
+                    .style("background-color", "white")
+                    .style("border", "solid")
+                    .style("border-width", "2px")
+                    .style("border-radius", "5px")
+                    .style("position", "absolute")
+                    .style("padding", "5px")
+                    .style("z-index", "10")
+                    .style("visibility", "hidden");
+
+                // Family member's node.
+                var nodes = svg.append("g").selectAll("circle").data(information.descendants());
+                nodes.enter().append("circle")
+                    .attr("cx", function(d) {
+                        return d.x;
+                    })
+                    .attr("cy", function(d) {
+                        return d.y;
+                    })
+                    .attr("r", 10)
+                    // .attr("opacity", function() {
+                    //  return 0.5;
+                    // })
+                    .attr("fill", function(d) {
+                        if (d.data.suicide != undefined &&
+                            d.data.suicide == "yes")
+                            return "red"
+                        else
+                            return "gray";
+                    })
+
+                    // Display information on mouse overlay.
+                    .on("mouseover", function(d) {                        
+                        tooltip.style("visibility", "visible")
+                            .text('ID: ' + d.data.child + " \n" +
+                                'PARENT: ' + d.data.parent)
+                    })
+                    .on("mousemove", function() {
+                        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+                    })
+                    .on("mouseout", function() {
+                        return tooltip.style("visibility", "hidden");
+
+                    });;
+
+                // Spouse nodes.
+                var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
+                spouseNodes.enter().append("circle")
+                    .attr("cx", function(d) {
+                        return d.x + 30;
+                    })
+                    .attr("cy", function(d) {
+                        return d.y;
+                    })
+                    .attr("r", 10)
+                    .classed("hide", function(d) {
+                        if (d.data.spouse == undefined)
+                            return true;
+                        else
+                            return false;
+                    })
+
+                    // .attr("opacity", function() {
+                    //  return 0.5;
+                    // })
+                    .attr("fill", function(d) {
+                        if (d.data.spouse != undefined &&
+                            d.data.spouse_suicide == "yes")
+                            return "red"
+                        else
+                            return "black";
+                    })
+                    // Display information on mouse overlay.
+                    .on("mouseover", function(d) {
+                        tooltip.style("visibility", "visible")
+                            .text('ID: ' + d.data.spouse)
+                    })
+                    .on("mousemove", function() {
+                        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+                    })
+                    .on("mouseout", function() {
+                        return tooltip.style("visibility", "hidden");
+
+                    });
+
+                // Family members names.
+                // if(selectedFamily != 3){
+                var names = svg.append("g").selectAll("text").data(information.descendants());
+                names.enter().append("text")
+                    .text(function(d) {
+                        return d.data.child;
+                    })
+                    .attr("x", function(d) {
+                        return d.x - 0;
+                    })
+                    .attr("y", function(d) {
+                        return d.y - 15;
+                    })
+                    .classed("bigger", true);
+                //  }
+
+                // Spouses names.
+                // if(selectedFamily != 3){
+                var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
+                spouseNames.enter().append("text")
+                    .text(function(d) {
+                        return d.data.spouse;
+                    })
+                    .attr("x", function(d) {
+                        return d.x + 30;
+                    })
+                    .attr("y", function(d) {
+                        return d.y + 25;
+                    })
+                    .classed("bigger", true);
+      
+			  });		
+		}
+	</script>
+</body>
+</html>

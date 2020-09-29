@@ -11,10 +11,8 @@
           color: white;
           font-size: 15px;
         }
-        .my-tooltip {
-          background: rgba(0, 0, 150, 0.7);
-          color: white;
-          font-weight: bold;
+        .tooltip-inner{
+		    white-space: pre-line; 
         }
 		path{
 			fill: none;
@@ -46,10 +44,10 @@
 		.hide{
 			visibility: hidden;
 		}
+
 	</style>
 </head>
 <body>
-
     <div class="header">
         Select family: 
         <select id="familyComboBox" onchange="getFamilyValue()">
@@ -65,26 +63,13 @@
             <option value="9">Nine  (very small)</option>
         </select>
     </div>  
-    <!--
-	<select id="familyComboBox" onchange="getFamilyValue()">
-	    <option value=""></option>
-	    <option value="1">One 	(small)</option>
-	    <option value="2">Two 	(small)</option>
-	    <option value="3">Three (very big)</option>
-	    <option value="4">Four 	(very small)</option>
-	    <option value="5">Five 	(big)</option>
-	    <option value="6">Six 	(very big)</option>
-	    <option value="7">Seven (medium)</option>
-	    <option value="8">Eight (small)</option>
-	    <option value="9">Nine	(very small)</option>
-	</select> -->
     
 	<script>
 
         var print = 0;
 
-            // Insert code to import and parse CSV file here.
-        var data = [{}];
+           // Insert code to import and parse CSV file here.
+        var data = [];
         var svg;
 
 		var selectedFamily = "";
@@ -120,7 +105,22 @@
 
                    svg.attr("width", 3000).attr("height", 2000) // Page sizes.
                         .append("g").attr("transform", "translate(0, 50)");
+                /*
+                d3.json("https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json", function(data) {
+    				console.log(data);
+				});
+				for (var i in data) {
+				    console.log(data[i]);
+				}
+				*/
+				d3.json("https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json")
+				  .then(function(data){
+				  	console.log(data);
+				  	
+				  });
 
+				  console.log(data);
+                /*
                 data = [{"child":"61318", "parent":"", "spouse":"61319", "spouse_suicide":"no", "sex":"F"},
 {"child":"47087", "parent":"61318","spouse": "47083", "spouse_suicide": "no","suicide":"no"},
 {"child":"53386", "parent":"61318","spouse": "53387", "spouse_suicide": "no","suicide":"no"},
@@ -162,6 +162,7 @@
 {"child":"13785", "parent":"13789","suicide":"no"},
 {"child":"1510", "parent":"13789","suicide":"no"}
                     ];
+                    */
 
             }else if(selectedFamily == 2){
 
@@ -240,6 +241,8 @@
 {"child":"58081", "parent":"10425","suicide":"no"},
 {"child":"63435", "parent":"42089","suicide":"no"}
                 ];
+
+
             }else if(selectedFamily == 3){
 
 
@@ -528,34 +531,7 @@
 {"child":"54528", "parent":"133","suicide":"no"},
 {"child":"10407", "parent":"38948","suicide":"no"},
 {"child":"16545", "parent":"16546","suicide":"yes"},
-{"child":"42606", "parent":"26663","suicide":"no"}];
-            }else if(selectedFamily == 4){
-
-            }else if(selectedFamily == 5){
-
-            }else if(selectedFamily == 6){
-
-            }else if(selectedFamily == 7){
-
-            }else if(selectedFamily == 8){
-
-            }else if(selectedFamily == 9){
-
-            }
-
-           // D3 Tree...
-    	   var dataStructure = d3.stratify()
-    			     .id(function(d){return d.child;})
-    			     .parentId(function(d){return d.parent;})(data);
-
-            // Resizing tree accordingly to data volume.
-            var treeStructure;
-            if(selectedFamily == 1){
-                treeStructure = d3.tree().size([2100,650]);
-            }else if(selectedFamily == 2){
-                treeStructure = d3.tree().size([2000,700]);
-            }else if(selectedFamily == 3){
-                treeStructure = d3.tree().size([7000, 1100]);
+{"child":"42606", "parent":"26663","suicide":"no"}]; 
 
             }else if(selectedFamily == 4){
 
@@ -570,118 +546,179 @@
             }else if(selectedFamily == 9){
 
             }
+            console.log("Informacoes: ");
+            console.log(data);
+    		//console.log(data);
+		    // D3 Tree...
+		/*var dataStructure = d3.stratify()
+		    .id(function(d) {
+		        return d.child;
+		    })
+		    .parentId(function(d) {
+		        return d.parent;
+		    })(data);
+		    console.log("test");
 
-            // D3 Tree...
-            var information = treeStructure(dataStructure);
-            console.log(information.descendants());
+		// Resizing tree accordingly to data volume.
+		var treeStructure;
+		if (selectedFamily == 1) {
+		    treeStructure = d3.tree().size([2100, 650]);
+		} else if (selectedFamily == 2) {
+		    treeStructure = d3.tree().size([2000, 700]);
+		} else if (selectedFamily == 3) {
+		    treeStructure = d3.tree().size([7000, 1100]);
 
-            // Connection lines.
-            var connections = svg.append("g").selectAll("path")
-            					.data(information.links());
-            connections.enter().append("path")
-                               .attr("d", function(d){
-    				return "M" + (d.source.x) + "," + d.source.y + " C " + 
-    				d.source.x + "," + (d.source.y + d.target.y)/2 + " " +
-    				d.target.x + "," + (d.source.y + d.target.y)/2 + " " +
-    				d.target.x + "," + d.target.y;
-    			     });
+		} else if (selectedFamily == 4) {
 
-            // Show dialogue text on mouse overlay.
-            var tooltip = d3.select("body")
-            .append("div")
-            .attr("class", "my-tooltip")//add the tooltip class
-            .style("position", "absolute")
-            .style("z-index", "10")
-            .style("visibility", "hidden");
+		} else if (selectedFamily == 5) {
 
-            // Family member's node.
-            var nodes = svg.append("g").selectAll("circle").data(information.descendants());
-            nodes.enter().append("circle")
-            	.attr("cx", function(d){return d.x;})
-            	.attr("cy", function(d){return d.y;})
-            	.attr("r", 10)
-            	// .attr("opacity", function() {
-            	// 	return 0.5;
-            	// })
-            	.attr("fill", function(d){
-            		if(d.data.suicide != undefined &&
-            			d.data.suicide == "yes")
-            			return "red"
-            		else 
-            			return "gray";
-            	})
+		} else if (selectedFamily == 6) {
 
-                // Display information on mouse overlay.
-            	.on("mouseover", function(d){
-                    tooltip.style("visibility", "visible")
-                    .text('ID: ' + d.data.child + " \n"
-                          +'PARENT: ' + d.data.parent)
-            	})
-                .on("mousemove", function() {
-                    return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
-                }) 
-            	.on("mouseout", function(){
-                    return tooltip.style("visibility", "hidden");
+		} else if (selectedFamily == 7) {
 
-            	});;
+		} else if (selectedFamily == 8) {
 
-            // Spouse nodes.
-            var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
-            spouseNodes.enter().append("circle")
-            	.attr("cx", function(d){return d.x + 30;})
-            	.attr("cy", function(d){return d.y;})
-            	.attr("r", 10)
-            	.classed("hide", function(d){
-            		if(d.data.spouse == undefined)
-            			return true;
-            		else
-            			return false;
-            	})
+		} else if (selectedFamily == 9) {
 
-            	// .attr("opacity", function() {
-            	// 	return 0.5;
-            	// })
-            	.attr("fill", function(d){
-            		if(d.data.spouse != undefined &&
-            			d.data.spouse_suicide == "yes")
-            			return "red"
-            		else 
-            			return "black";
-            	})
-                // Display information on mouse overlay.
-                .on("mouseover", function(d){
-                    tooltip.style("visibility", "visible")
-                    .text('ID: ' + d.data.spouse)
-                })
-                .on("mousemove", function() {
-                    return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
-                }) 
-                .on("mouseout", function(){
-                    return tooltip.style("visibility", "hidden");
+		}
 
-                });
+		// D3 Tree...
+		var information = treeStructure(dataStructure);
+		console.log(information.descendants());
 
-            // Family members names.
-           // if(selectedFamily != 3){
-                var names = svg.append("g").selectAll("text").data(information.descendants());
-                names.enter().append("text")
-                			.text(function(d){return d.data.child;})
-                			.attr("x", function(d){return d.x - 0;})
-                			.attr("y", function(d){return d.y - 15;})
-                			.classed("bigger", true);
-          //  }
+		// Connection lines.
+		var connections = svg.append("g").selectAll("path")
+		    .data(information.links());
+		connections.enter().append("path")
+		    .attr("d", function(d) {
+		        return "M" + (d.source.x) + "," + d.source.y + " C " +
+		            d.source.x + "," + (d.source.y + d.target.y) / 2 + " " +
+		            d.target.x + "," + (d.source.y + d.target.y) / 2 + " " +
+		            d.target.x + "," + d.target.y;
+		    });
 
-            // Spouses names.
-           // if(selectedFamily != 3){
-                var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
-                spouseNames.enter().append("text")
-                	.text(function(d){return d.data.spouse;})
-                	.attr("x", function(d){return d.x + 30;})
-                	.attr("y", function(d){return d.y + 25;})
-                	.classed("bigger", true);
-          //  }
-        }
+		// Show dialogue text on mouse overlay.
+		var tooltip = d3.select("body")
+		    .append("div")
+		    .attr("class", "tooltip-inner") 
+		    .style("background-color", "white")
+		    .style("border", "solid")
+		    .style("border-width", "2px")
+		    .style("border-radius", "5px")
+		    .style("position", "absolute")
+		    .style("padding", "5px")
+		    .style("z-index", "10")
+		    .style("visibility", "hidden");
 
+		// Family member's node.
+		var nodes = svg.append("g").selectAll("circle").data(information.descendants());
+		nodes.enter().append("circle")
+		    .attr("cx", function(d) {
+		        return d.x;
+		    })
+		    .attr("cy", function(d) {
+		        return d.y;
+		    })
+		    .attr("r", 10)
+		    // .attr("opacity", function() {
+		    // 	return 0.5;
+		    // })
+		    .attr("fill", function(d) {
+		        if (d.data.suicide != undefined &&
+		            d.data.suicide == "yes")
+		            return "red"
+		        else
+		            return "gray";
+		    })
+
+		    // Display information on mouse overlay.
+		    .on("mouseover", function(d) {
+		        tooltip.style("visibility", "visible")
+		            .text('ID: ' + d.data.child + " \n" +
+		                'PARENT: ' + d.data.parent)
+		    })
+		    .on("mousemove", function() {
+		        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+		    })
+		    .on("mouseout", function() {
+		        return tooltip.style("visibility", "hidden");
+
+		    });;
+
+		// Spouse nodes.
+		var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
+		spouseNodes.enter().append("circle")
+		    .attr("cx", function(d) {
+		        return d.x + 30;
+		    })
+		    .attr("cy", function(d) {
+		        return d.y;
+		    })
+		    .attr("r", 10)
+		    .classed("hide", function(d) {
+		        if (d.data.spouse == undefined)
+		            return true;
+		        else
+		            return false;
+		    })
+
+		    // .attr("opacity", function() {
+		    // 	return 0.5;
+		    // })
+		    .attr("fill", function(d) {
+		        if (d.data.spouse != undefined &&
+		            d.data.spouse_suicide == "yes")
+		            return "red"
+		        else
+		            return "black";
+		    })
+		    // Display information on mouse overlay.
+		    .on("mouseover", function(d) {
+		        tooltip.style("visibility", "visible")
+		            .text('ID: ' + d.data.spouse)
+		    })
+		    .on("mousemove", function() {
+		        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+		    })
+		    .on("mouseout", function() {
+		        return tooltip.style("visibility", "hidden");
+
+		    });
+
+		// Family members names.
+		// if(selectedFamily != 3){
+		var names = svg.append("g").selectAll("text").data(information.descendants());
+		names.enter().append("text")
+		    .text(function(d) {
+		        return d.data.child;
+		    })
+		    .attr("x", function(d) {
+		        return d.x - 0;
+		    })
+		    .attr("y", function(d) {
+		        return d.y - 15;
+		    })
+		    .classed("bigger", true);
+		//  }
+
+		// Spouses names.
+		// if(selectedFamily != 3){
+		var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
+		spouseNames.enter().append("text")
+		    .text(function(d) {
+		        return d.data.spouse;
+		    })
+		    .attr("x", function(d) {
+		        return d.x + 30;
+		    })
+		    .attr("y", function(d) {
+		        return d.y + 25;
+		    })
+		    .classed("bigger", true);
+		//  }
+		*/
+		}
+		
 	</script>
 </body>
 </html>

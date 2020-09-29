@@ -1,0 +1,7 @@
+[{"child":"17", "parent":"", "spouse":"5", "spouse_suicide":"no", "suicide":"no"}, 
+{"child":"30", "parent":"17","spouse": "31", "spouse_suicide": "no","suicide":"no"}, 
+{"child":"32", "parent":"17","spouse": "34", "spouse_suicide": "no","suicide":"no"}, 
+{"child":"35", "parent":"17","spouse": "37", "spouse_suicide": "no","suicide":"no"}, 
+{"child":"46702", "parent":"30","spouse": "46701", "spouse_suicide": "no","suicide":"no"}, 
+{"child":"62887", "parent":"30","spouse": "62888", "spouse_suicide": "no","suicide":"no"}, 
+{"child":"39510", "parent":"30","spouse": "39509", "spouse_suicide": "no","suicide":"no"}]
