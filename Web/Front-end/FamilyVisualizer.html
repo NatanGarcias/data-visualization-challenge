@@ -4,17 +4,19 @@
 	<title>Family Tree</title>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<style>
+     /*   p {
+          font-family: "Arial", "Helvetica", serif;
+        }*/
         .header {
           padding: 10px;
           text-align: center;
-          background: #1abc9c;
+          background: #0F0F4A;
           color: white;
           font-size: 15px;
         }
         .tooltip-inner{
 		    white-space: pre-line; 
-        }
-		path{
+        }		path{
 			fill: none;
 			stroke: gray;
 			stroke-width: 1.5;
@@ -49,22 +51,101 @@
 </head>
 <body>
     <div class="header">
-        Select family: 
-        <select id="familyComboBox" onchange="getFamilyValue()">
-            <option value=""></option>
-            <option value="1">One   (small)</option>
-            <option value="2">Two   (small)</option>
-            <option value="3">Three (very big)</option>
-            <option value="4">Four  (very small)</option>
-            <option value="5">Five  (big)</option>
-            <option value="6">Six   (very big)</option>
-            <option value="7">Seven (medium)</option>
-            <option value="8">Eight (small)</option>
-            <option value="9">Nine  (very small)</option>
-        </select>
+        <b><p style="font-size: 20px">Select family:</p></b> 
+		<form id="familyDetails">
+	        <select id="familyComboBox">
+	            <option value=""></option>
+	            <option value="1">One   (small)</option>
+	            <option value="2">Two   (small)</option>
+	            <option value="3">Three (very big)</option>
+	            <option value="4">Four  (very small)</option>
+	            <option value="5">Five  (big)</option>
+	            <option value="6">Six   (very big)</option>
+	            <option value="7">Seven (medium)</option>
+	            <option value="8">Eight (small)</option>
+	            <option value="9">Nine  (very small)</option>
+	        </select>
+        </form>        
     </div>  
-    
+    	
+    	</br>
+        <table>
+          <tr>
+            <th>Filters</th>
+            <th>Family Information</th>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbNotSuicided" checked="checked" class="cbox"> Not suicided</td>
+            <td rowspan="4"><p id="familyDetailsText"> Family additional details will be shown here. </p>
+        	</br><b>Note</b>: The above elements of the three weren't printed due to tree's structure (such as duplicated spouses) or lack of parent information in dataset.
+        	</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbDepression" checked="checked" class="cbox"> Depression</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbEating" checked="checked" class="cbox"> Eating</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbAlcohol" checked="checked" class="cbox"> Alcohol</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbSomaticDisorder" checked="checked" class="cbox"> Somatic disorder</td>
+          </tr> 
+          <tr>
+            <td><input type="checkbox" id="cbObesity" checked="checked" class="cbox"> Obesity</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbPsychosis" checked="checked" class="cbox"> Psychosis</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbBipolar" checked="checked" class="cbox"> Bipolar spec. illness</td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbTrauma" checked="checked" class="cbox"> Interpersonal trauma</td>
+          </tr>
+
+           <tr>
+            <td><input type="checkbox" id="cbPD" checked="checked" class="cbox"> Personality Disorder</td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbAnxiety" checked="checked" class="cbox"> Anxiety<td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbEmotional" checked="checked" class="cbox"> Emotional<td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbAsthma" checked="checked" class="cbox"> Asthma<td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbCOPD" checked="checked" class="cbox"> Chronic Obstructive Pulmonary Disease<td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbImpulse" checked="checked" class="cbox"> Impulse Constrol Disorder<td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbCardiovascular" checked="checked" class="cbox"> Cardiovascular Disease<td>
+          </tr>
+           <tr>
+            <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease<td>
+          </tr>
+        </table>
 	<script>
+        
+        
+        
+        
+
+		// Family additional details.
+		var familyCodes = {
+		    1: "Duplicated spouses: 44862 e 49224. </br> No parent information: 60064 e 37544. </br> Duplicated information in dataset: 40788 (didn't suicide)",
+		    2: 12,
+		    3: 13
+		};
+
+        // Refresh page when changing checbox or combo box.
+        d3.select("#familyComboBox").on("change",update);
+        d3.selectAll('.cbox').on("change",update);
 
         var print = 0;
 
@@ -73,652 +154,271 @@
         var svg;
 
 		var selectedFamily = "";
-        function getFamilyValue() {
+
+        var filterAtributes = {
+            "non-suicided": true,
+            "depression": true,
+            "eating": true,
+            "alcohol": true,
+            "somatic-disorder": true,
+            "obesity": true,
+            "psychosis": true,
+            "bipolar": true,
+            "personality-disorder": true,
+            "anxiety": true,
+            "emotional": true,
+            "interpersonal-trauma": true,
+            "asthma": true,
+            "copd": true,
+            "autoimmune": true,
+            "cardiovascular": true,
+            "impulse": true
+         }
+
+        function update() {
+
+            filterAtributes["non-suicided"] = d3.select("#cbNotSuicided").property("checked");
+            filterAtributes["depression"] = d3.select("#cbDepression").property("checked");
+            filterAtributes["eating"] = d3.select("#cbEating").property("checked");
+            filterAtributes["alcohol"] = d3.select("#cbAlcohol").property("checked");
+            filterAtributes["somatic-disorder"] = d3.select("#cbSomaticDisorder").property("checked");
+            filterAtributes["obesity"] = d3.select("#cbObesity").property("checked");
+            filterAtributes["psychosis"] = d3.select("#cbPsychosis").property("checked");
+            filterAtributes["bipolar"] = d3.select("#cbBipolar").property("checked");
+            filterAtributes["interpersonal-trauma"] = d3.select("#cbTrauma").property("checked");
+            filterAtributes["personality-disorder"] = d3.select("#cbPD").property("checked");
+            filterAtributes["anxiety"] = d3.select("#cbAnxiety").property("checked");
+            filterAtributes["emotional"] = d3.select("#cbEmotional").property("checked");
+            filterAtributes["asthma"] = d3.select("#cbAsthma").property("checked");
+            filterAtributes["copd"] = d3.select("#cbCOPD").property("checked");
+            filterAtributes["autoimmune"] = d3.select("#cbAutoimmune").property("checked");
+            filterAtributes["cardiovascular"] = d3.select("#cbCardiovascular").property("checked");
+            filterAtributes["impulse"] = d3.select("#cbImpulse").property("checked");
+
+
+            console.log(filterAtributes["non-suicided"]);
+
         	var tmp = document.getElementById("familyComboBox");
   			var selectedFamily = tmp.options[tmp.selectedIndex].value;
   			console.log(selectedFamily);
         
+
+        	document.getElementById("familyDetailsText").innerHTML = familyCodes[selectedFamily];
+
             if(print > 0){
                 svg.selectAll('*').remove();
             }else{
                 svg = d3.select("body").append("svg")
-                        .attr("width", 7000).attr("height", 2000) // Page sizes.
+                        .attr("width", 6000).attr("height", 2000) // Page sizes.
                         .append("g").attr("transform", "translate(0, 50)");
             }
     
             if(selectedFamily != 0)
                 print++;
 
-            // TRYING TO PARSE..
+
+            var datasetDirectory = "";
+
             if(selectedFamily == 0){
-                console.log("eh zero!");
                 data = [];
-
             }else if(selectedFamily == 1){
-
-                /*
-                console.log("eh um!");
-                d3.json("Families/Family_1.json").then(function(data) {
-                  console.log(data[0]);
-                }); 
-                */
-
-                   svg.attr("width", 3000).attr("height", 2000) // Page sizes.
-                        .append("g").attr("transform", "translate(0, 50)");
-                /*
-                d3.json("https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json", function(data) {
-    				console.log(data);
-				});
-				for (var i in data) {
-				    console.log(data[i]);
-				}
-				*/
-				d3.json("https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json")
-				  .then(function(data){
-				  	console.log(data);
-				  	
-				  });
-
-				  console.log(data);
-                /*
-                data = [{"child":"61318", "parent":"", "spouse":"61319", "spouse_suicide":"no", "sex":"F"},
-{"child":"47087", "parent":"61318","spouse": "47083", "spouse_suicide": "no","suicide":"no"},
-{"child":"53386", "parent":"61318","spouse": "53387", "spouse_suicide": "no","suicide":"no"},
-{"child":"62036", "parent":"47087","spouse": "62034", "spouse_suicide": "no","suicide":"no"},
-{"child":"67006", "parent":"47087","spouse": "67004", "spouse_suicide": "no","suicide":"no"},
-{"child":"9278", "parent":"53386","spouse": "67703", "spouse_suicide": "no","suicide":"no"},
-{"child":"18524", "parent":"62036","suicide":"no"},
-{"child":"65491", "parent":"62036","suicide":"no"},
-{"child":"24277", "parent":"62036","spouse": "24276", "spouse_suicide": "no","suicide":"no"},
-{"child":"54564", "parent":"67006","spouse": "54563", "spouse_suicide": "no","suicide":"no"},
-{"child":"65130", "parent":"62036","spouse": "65129", "spouse_suicide": "no","suicide":"yes"},
-{"child":"4547", "parent":"62036","suicide":"no"},
-{"child":"39045", "parent":"62036","suicide":"no"},
-{"child":"4551", "parent":"62036","suicide":"no"},
-{"child":"4556", "parent":"62036","suicide":"no"},
-{"child":"6428", "parent":"62036","suicide":"no"},
-{"child":"54315", "parent":"9278","spouse": "48154", "spouse_suicide": "no","suicide":"no"},
-{"child":"24279", "parent":"24277","spouse": "9363", "spouse_suicide": "no","suicide":"no"},
-{"child":"5170", "parent":"65130","suicide":"no"},
-{"child":"5171", "parent":"65130","spouse": "5172", "spouse_suicide": "no","suicide":"no"},
-{"child":"5181", "parent":"65130","suicide":"no"},
-{"child":"43983", "parent":"65130","suicide":"no"},
-{"child":"60995", "parent":"54564","spouse": "40440", "spouse_suicide": "no","suicide":"no"},
-{"child":"10841", "parent":"65130","suicide":"no"},
-{"child":"49986", "parent":"54315","spouse": "49989", "spouse_suicide": "no","suicide":"no"},
-{"child":"66710", "parent":"65130","suicide":"no"},
-{"child":"9361", "parent":"24279","suicide":"no"},
-{"child":"49985", "parent":"49986","suicide":"no"},
-{"child":"1967", "parent":"5171","suicide":"yes"},
-{"child":"40439", "parent":"60995","suicide":"no"},
-{"child":"40329", "parent":"24279","suicide":"yes"},
-{"child":"26695", "parent":"60995","suicide":"yes"},
-{"child":"139", "parent":"5171","suicide":"no"},
-{"child":"42479", "parent":"5171","suicide":"no"},
-{"child":"13789", "parent":"49986","spouse": "13788", "spouse_suicide": "no","suicide":"yes"},
-{"child":"63449", "parent":"24279","suicide":"no"},
-{"child":"35342", "parent":"24279","suicide":"no"},
-{"child":"12915", "parent":"24279","suicide":"no"},
-{"child":"13785", "parent":"13789","suicide":"no"},
-{"child":"1510", "parent":"13789","suicide":"no"}
-                    ];
-                    */
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 2){
-
-                var data = [{"child":"91", "parent":"", "spouse":"92", "spouse_suicide":"no", "sex":"F"},
-{"child":"93", "parent":"91","spouse": "94", "spouse_suicide": "no","suicide":"no"},
-{"child":"42340", "parent":"91","spouse": "42341", "spouse_suicide": "no","suicide":"no"},
-{"child":"96", "parent":"93","spouse": "97", "spouse_suicide": "no","suicide":"no"},
-{"child":"27804", "parent":"42340","spouse": "27805", "spouse_suicide": "no","suicide":"no"},
-{"child":"55150", "parent":"96","spouse": "55149", "spouse_suicide": "no","suicide":"no"},
-{"child":"42386", "parent":"27804","spouse": "42385", "spouse_suicide": "no","suicide":"no"},
-{"child":"49841", "parent":"96","spouse": "49840", "spouse_suicide": "no","suicide":"no"},
-{"child":"27801", "parent":"27804","spouse": "27800", "spouse_suicide": "no","suicide":"no"},
-{"child":"66767", "parent":"96","spouse": "66768", "spouse_suicide": "no","suicide":"no"},
-{"child":"17989", "parent":"27804","spouse": "17990", "spouse_suicide": "no","suicide":"no"},
-{"child":"27806", "parent":"27801","spouse": "27807", "spouse_suicide": "no","suicide":"no"},
-{"child":"27808", "parent":"27801","suicide":"no"},
-{"child":"27814", "parent":"27801","spouse": "27815", "spouse_suicide": "no","suicide":"yes"},
-{"child":"27816", "parent":"27801","suicide":"no"},
-{"child":"7142", "parent":"17989","spouse": "7141", "spouse_suicide": "no","suicide":"no"},
-{"child":"57587", "parent":"49841","spouse": "57588", "spouse_suicide": "no","suicide":"no"},
-{"child":"13716", "parent":"55150","spouse": "35279", "spouse_suicide": "no","suicide":"no"},
-{"child":"13112", "parent":"66767","spouse": "13111", "spouse_suicide": "no","suicide":"no"},
-{"child":"22580", "parent":"55150","spouse": "22579", "spouse_suicide": "no","suicide":"no"},
-{"child":"52220", "parent":"42386","spouse": "66666", "spouse_suicide": "no","suicide":"yes"},
-{"child":"45551", "parent":"57587","spouse": "45552", "spouse_suicide": "no","suicide":"no"},
-{"child":"40801", "parent":"22580","spouse": "40800", "spouse_suicide": "no","suicide":"no"},
-{"child":"3854", "parent":"13112","spouse": "3853", "spouse_suicide": "no","suicide":"no"},
-{"child":"9474", "parent":"27814","spouse": "9473", "spouse_suicide": "no","suicide":"no"},
-{"child":"22889", "parent":"27814","suicide":"no"},
-{"child":"22893", "parent":"27814","suicide":"no"},
-{"child":"6270", "parent":"7142","spouse": "6269", "spouse_suicide": "no","suicide":"no"},
-{"child":"858", "parent":"13112","suicide":"no"},
-{"child":"20337", "parent":"13716","spouse": "20338", "spouse_suicide": "no","suicide":"no"},
-{"child":"4503", "parent":"52220","suicide":"no"},
-{"child":"23690", "parent":"27814","suicide":"no"},
-{"child":"26326", "parent":"52220","suicide":"no"},
-{"child":"59766", "parent":"52220","suicide":"no"},
-{"child":"33108", "parent":"27806","spouse": "6155", "spouse_suicide": "no","suicide":"no"},
-{"child":"19968", "parent":"52220","suicide":"no"},
-{"child":"66660", "parent":"52220","suicide":"no"},
-{"child":"2303", "parent":"45551","spouse": "62634", "spouse_suicide": "no","suicide":"no"},
-{"child":"8264", "parent":"3854","suicide":"yes"},
-{"child":"8266", "parent":"3854","suicide":"no"},
-{"child":"22646", "parent":"9474","suicide":"no"},
-{"child":"66253", "parent":"20337","spouse": "65448", "spouse_suicide": "no","suicide":"yes"},
-{"child":"66591", "parent":"20337","suicide":"no"},
-{"child":"65765", "parent":"9474","spouse": "39372", "spouse_suicide": "no","suicide":"yes"},
-{"child":"33719", "parent":"9474","suicide":"no"},
-{"child":"6333", "parent":"9474","suicide":"no"},
-{"child":"65152", "parent":"33108","spouse": "39140", "spouse_suicide": "no","suicide":"yes"},
-{"child":"13977", "parent":"6270","suicide":"yes"},
-{"child":"19013", "parent":"20337","suicide":"no"},
-{"child":"54095", "parent":"6270","suicide":"no"},
-{"child":"54798", "parent":"6270","suicide":"no"},
-{"child":"18999", "parent":"33108","suicide":"no"},
-{"child":"62750", "parent":"40801","spouse": "61537", "spouse_suicide": "no","suicide":"no"},
-{"child":"14489", "parent":"6270","suicide":"no"},
-{"child":"23883", "parent":"858","spouse": "65690", "spouse_suicide": "no","suicide":"no"},
-{"child":"39093", "parent":"20337","suicide":"no"},
-{"child":"62633", "parent":"2303","suicide":"yes"},
-{"child":"66251", "parent":"66253","suicide":"no"},
-{"child":"9413", "parent":"66253","suicide":"no"},
-{"child":"57627", "parent":"2303","suicide":"no"},
-{"child":"10425", "parent":"62750","spouse": "10424", "spouse_suicide": "no","suicide":"no"},
-{"child":"42089", "parent":"23883","spouse": "11008", "spouse_suicide": "no","suicide":"yes"},
-{"child":"65151", "parent":"65152","suicide":"no"},
-{"child":"13959", "parent":"66253","suicide":"no"},
-{"child":"4684", "parent":"66253","suicide":"no"},
-{"child":"37201", "parent":"2303","suicide":"no"},
-{"child":"37548", "parent":"65152","suicide":"no"},
-{"child":"11711", "parent":"65765","suicide":"no"},
-{"child":"10423", "parent":"10425","suicide":"yes"},
-{"child":"42087", "parent":"42089","suicide":"no"},
-{"child":"10694", "parent":"10425","suicide":"no"},
-{"child":"9070", "parent":"10425","suicide":"no"},
-{"child":"58081", "parent":"10425","suicide":"no"},
-{"child":"63435", "parent":"42089","suicide":"no"}
-                ];
-
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 3){
-
-
-                svg.attr("width", 5500).attr("height", 2000) // Page sizes.
-                    .append("g").attr("transform", "translate(0, 50)");
-
-                data = [{"child":"14670", "parent":"", "spouse":"14671", "spouse_suicide":"no", "sex":"F"},
-{"child":"35565", "parent":"14670","spouse": "35566", "spouse_suicide": "no","suicide":"no"},
-{"child":"37014", "parent":"14670","spouse": "37015", "spouse_suicide": "no","suicide":"no"},
-{"child":"56799", "parent":"14670","spouse": "56800", "spouse_suicide": "no","suicide":"no"},
-{"child":"55596", "parent":"14670","spouse": "55595", "spouse_suicide": "no","suicide":"no"},
-{"child":"20201", "parent":"14670","spouse": "20202", "spouse_suicide": "no","suicide":"no"},
-{"child":"15973", "parent":"35565","spouse": "15972", "spouse_suicide": "no","suicide":"no"},
-{"child":"32457", "parent":"35565","spouse": "32456", "spouse_suicide": "no","suicide":"no"},
-{"child":"35564", "parent":"35565","spouse": "35567", "spouse_suicide": "no","suicide":"no"},
-{"child":"37013", "parent":"37014","spouse": "37012", "spouse_suicide": "no","suicide":"no"},
-{"child":"47704", "parent":"35565","spouse": "47703", "spouse_suicide": "no","suicide":"no"},
-{"child":"56798", "parent":"56799","spouse": "56797", "spouse_suicide": "no","suicide":"no"},
-{"child":"58990", "parent":"37014","spouse": "58989", "spouse_suicide": "no","suicide":"no"},
-{"child":"38689", "parent":"35565","spouse": "38690", "spouse_suicide": "no","suicide":"no"},
-{"child":"41068", "parent":"37014","spouse": "41069", "spouse_suicide": "no","suicide":"no"},
-{"child":"55597", "parent":"55596","spouse": "55598", "spouse_suicide": "no","suicide":"no"},
-{"child":"25584", "parent":"37014","spouse": "25585", "spouse_suicide": "no","suicide":"no"},
-{"child":"40622", "parent":"35565","spouse": "40621", "spouse_suicide": "no","suicide":"no"},
-{"child":"47863", "parent":"35565","spouse": "34743", "spouse_suicide": "no","suicide":"no"},
-{"child":"12978", "parent":"56799","spouse": "12977", "spouse_suicide": "no","suicide":"no"},
-{"child":"61446", "parent":"20201","spouse": "61447", "spouse_suicide": "no","suicide":"no"},
-{"child":"54022", "parent":"35565","spouse": "54023", "spouse_suicide": "no","suicide":"no"},
-{"child":"5787", "parent":"56799","spouse": "53418", "spouse_suicide": "no","suicide":"no"},
-{"child":"7953", "parent":"37013","spouse": "7952", "spouse_suicide": "no","suicide":"no"},
-{"child":"26166", "parent":"15973","spouse": "26165", "spouse_suicide": "no","suicide":"no"},
-{"child":"35574", "parent":"35564","spouse": "35575", "spouse_suicide": "no","suicide":"no"},
-{"child":"35583", "parent":"35564","spouse": "35584", "spouse_suicide": "no","suicide":"no"},
-{"child":"37016", "parent":"37013","spouse": "37017", "spouse_suicide": "no","suicide":"no"},
-{"child":"48962", "parent":"40622","spouse": "48961", "spouse_suicide": "no","suicide":"no"},
-{"child":"56810", "parent":"56798","spouse": "56811", "spouse_suicide": "no","suicide":"no"},
-{"child":"59064", "parent":"15973","spouse": "47481", "spouse_suicide": "no","suicide":"no"},
-{"child":"63218", "parent":"47863","spouse": "63213", "spouse_suicide": "no","suicide":"no"},
-{"child":"38646", "parent":"58990","spouse": "38647", "spouse_suicide": "no","suicide":"no"},
-{"child":"38697", "parent":"38689","spouse": "38698", "spouse_suicide": "no","suicide":"no"},
-{"child":"55601", "parent":"55597","spouse": "55602", "spouse_suicide": "no","suicide":"no"},
-{"child":"62513", "parent":"41068","spouse": "57616", "spouse_suicide": "no","suicide":"no"},
-{"child":"63214", "parent":"25584","spouse": "63215", "spouse_suicide": "no","suicide":"no"},
-{"child":"17418", "parent":"61446","spouse": "64364", "spouse_suicide": "no","suicide":"no"},
-{"child":"17420", "parent":"61446","spouse": "17421", "spouse_suicide": "no","suicide":"no"},
-{"child":"5790", "parent":"5787","spouse": "5791", "spouse_suicide": "no","suicide":"no"},
-{"child":"28701", "parent":"47704","spouse": "28702", "spouse_suicide": "no","suicide":"no"},
-{"child":"23294", "parent":"47863","spouse": "23295", "spouse_suicide": "no","suicide":"no"},
-{"child":"24636", "parent":"12978","spouse": "24637", "spouse_suicide": "no","suicide":"no"},
-{"child":"39013", "parent":"40622","spouse": "39015", "spouse_suicide": "no","suicide":"no"},
-{"child":"39021", "parent":"32457","spouse": "39022", "spouse_suicide": "no","suicide":"no"},
-{"child":"2435", "parent":"54022","spouse": "33084", "spouse_suicide": "no","suicide":"no"},
-{"child":"1698", "parent":"35574","spouse": "1697", "spouse_suicide": "no","suicide":"no"},
-{"child":"64463", "parent":"7953","spouse": "64462", "spouse_suicide": "no","suicide":"no"},
-{"child":"20539", "parent":"37016","spouse": "20538", "spouse_suicide": "no","suicide":"no"},
-{"child":"31670", "parent":"62513","spouse": "31669", "spouse_suicide": "no","suicide":"no"},
-{"child":"9543", "parent":"28701","spouse": "9542", "spouse_suicide": "no","suicide":"no"},
-{"child":"10403", "parent":"26166","suicide":"no"},
-{"child":"32118", "parent":"56810","spouse": "32117", "spouse_suicide": "no","suicide":"no"},
-{"child":"33960", "parent":"63214","spouse": "33961", "spouse_suicide": "no","suicide":"no"},
-{"child":"35646", "parent":"26166","spouse": "35645", "spouse_suicide": "no","suicide":"no"},
-{"child":"5857", "parent":"37016","spouse": "5858", "spouse_suicide": "no","suicide":"no"},
-{"child":"65736", "parent":"26166","suicide":"no"},
-{"child":"65737", "parent":"26166","suicide":"no"},
-{"child":"65738", "parent":"26166","suicide":"no"},
-{"child":"65739", "parent":"26166","spouse": "65740", "spouse_suicide": "no","suicide":"yes"},
-{"child":"65741", "parent":"26166","suicide":"no"},
-{"child":"13800", "parent":"59064","spouse": "43885", "spouse_suicide": "no","suicide":"no"},
-{"child":"34955", "parent":"38646","spouse": "34956", "spouse_suicide": "no","suicide":"no"},
-{"child":"32909", "parent":"35574","spouse": "32908", "spouse_suicide": "no","suicide":"no"},
-{"child":"46570", "parent":"39013","spouse": "46569", "spouse_suicide": "no","suicide":"no"},
-{"child":"41000", "parent":"63214","spouse": "41004", "spouse_suicide": "no","suicide":"no"},
-{"child":"62744", "parent":"5790","spouse": "62743", "spouse_suicide": "no","suicide":"no"},
-{"child":"4139", "parent":"39021","spouse": "4140", "spouse_suicide": "no","suicide":"no"},
-{"child":"4287", "parent":"48962","spouse": "4288", "spouse_suicide": "no","suicide":"no"},
-{"child":"4302", "parent":"38697","spouse": "4303", "spouse_suicide": "no","suicide":"no"},
-{"child":"4304", "parent":"38697","spouse": "4305", "spouse_suicide": "no","suicide":"no"},
-{"child":"5277", "parent":"35574","spouse": "5278", "spouse_suicide": "no","suicide":"no"},
-{"child":"5287", "parent":"35574","spouse": "5288", "spouse_suicide": "no","suicide":"no"},
-{"child":"25529", "parent":"55601","spouse": "25531", "spouse_suicide": "no","suicide":"no"},
-{"child":"35965", "parent":"56810","spouse": "35966", "spouse_suicide": "no","suicide":"no"},
-{"child":"2225", "parent":"24636","spouse": "2224", "spouse_suicide": "no","suicide":"no"},
-{"child":"6457", "parent":"17418","spouse": "39751", "spouse_suicide": "no","suicide":"yes"},
-{"child":"29350", "parent":"17418","suicide":"no"},
-{"child":"61031", "parent":"2435","spouse": "61030", "spouse_suicide": "no","suicide":"no"},
-{"child":"17741", "parent":"17420","suicide":"no"},
-{"child":"19420", "parent":"63218","spouse": "4544", "spouse_suicide": "no","suicide":"no"},
-{"child":"42365", "parent":"17420","suicide":"no"},
-{"child":"23766", "parent":"23294","spouse": "23767", "spouse_suicide": "no","suicide":"no"},
-{"child":"9563", "parent":"63218","spouse": "9562", "spouse_suicide": "no","suicide":"no"},
-{"child":"42846", "parent":"17420","suicide":"no"},
-{"child":"53265", "parent":"17420","suicide":"yes"},
-{"child":"9982", "parent":"17418","suicide":"no"},
-{"child":"3073", "parent":"17420","suicide":"no"},
-{"child":"16829", "parent":"5857","suicide":"no"},
-{"child":"42192", "parent":"5857","suicide":"no"},
-{"child":"49266", "parent":"5857","spouse": "49265", "spouse_suicide": "no","suicide":"no"},
-{"child":"53238", "parent":"5857","suicide":"no"},
-{"child":"20126", "parent":"1698","spouse": "20127", "spouse_suicide": "no","suicide":"no"},
-{"child":"20657", "parent":"46570","suicide":"no"},
-{"child":"28355", "parent":"46570","suicide":"no"},
-{"child":"32122", "parent":"32118","spouse": "53613", "spouse_suicide": "no","suicide":"no"},
-{"child":"35661", "parent":"35646","spouse": "35662", "spouse_suicide": "no","suicide":"no"},
-{"child":"2909", "parent":"13800","spouse": "2908", "spouse_suicide": "no","suicide":"no"},
-{"child":"29952", "parent":"64463","suicide":"no"},
-{"child":"29955", "parent":"64463","spouse": "29956", "spouse_suicide": "no","suicide":"no"},
-{"child":"36244", "parent":"5857","suicide":"no"},
-{"child":"36251", "parent":"5857","spouse": "36252", "spouse_suicide": "no","suicide":"no"},
-{"child":"36257", "parent":"5857","suicide":"yes"},
-{"child":"36714", "parent":"46570","suicide":"no"},
-{"child":"38467", "parent":"4287","suicide":"no"},
-{"child":"58026", "parent":"33960","spouse": "58027", "spouse_suicide": "no","suicide":"no"},
-{"child":"3405", "parent":"41000","spouse": "3406", "spouse_suicide": "no","suicide":"no"},
-{"child":"55424", "parent":"2225","suicide":"no"},
-{"child":"56402", "parent":"20539","spouse": "32164", "spouse_suicide": "no","suicide":"no"},
-{"child":"18799", "parent":"4287","suicide":"no"},
-{"child":"18801", "parent":"4287","suicide":"yes"},
-{"child":"18814", "parent":"4287","suicide":"no"},
-{"child":"18833", "parent":"46570","spouse": "18834", "spouse_suicide": "no","suicide":"yes"},
-{"child":"18834", "parent":"35583","spouse": "18833", "spouse_suicide": "yes","suicide":"no"},
-{"child":"18840", "parent":"46570","suicide":"no"},
-{"child":"22352", "parent":"25529","spouse": "22350", "spouse_suicide": "no","suicide":"no"},
-{"child":"24406", "parent":"5277","spouse": "17264", "spouse_suicide": "no","suicide":"no"},
-{"child":"49073", "parent":"34955","spouse": "49072", "spouse_suicide": "no","suicide":"no"},
-{"child":"2235", "parent":"2225","suicide":"no"},
-{"child":"2236", "parent":"2225","suicide":"no"},
-{"child":"2237", "parent":"2225","suicide":"no"},
-{"child":"2238", "parent":"2225","suicide":"no"},
-{"child":"2239", "parent":"2225","suicide":"no"},
-{"child":"2240", "parent":"2225","spouse": "48454", "spouse_suicide": "no","suicide":"yes"},
-{"child":"2241", "parent":"2225","suicide":"no"},
-{"child":"19047", "parent":"31670","suicide":"no"},
-{"child":"24348", "parent":"31670","suicide":"no"},
-{"child":"24353", "parent":"31670","suicide":"yes"},
-{"child":"24355", "parent":"31670","suicide":"no"},
-{"child":"24356", "parent":"31670","suicide":"no"},
-{"child":"64115", "parent":"65739","suicide":"no"},
-{"child":"2682", "parent":"5287","suicide":"no"},
-{"child":"6456", "parent":"6457","suicide":"no"},
-{"child":"17544", "parent":"4304","spouse": "17543", "spouse_suicide": "no","suicide":"no"},
-{"child":"25046", "parent":"32909","suicide":"no"},
-{"child":"25167", "parent":"32909","suicide":"no"},
-{"child":"25409", "parent":"32909","suicide":"no"},
-{"child":"28594", "parent":"9543","suicide":"no"},
-{"child":"20347", "parent":"32909","suicide":"no"},
-{"child":"34718", "parent":"32909","suicide":"no"},
-{"child":"68060", "parent":"6457","suicide":"no"},
-{"child":"5197", "parent":"5287","suicide":"no"},
-{"child":"8111", "parent":"5287","suicide":"no"},
-{"child":"10290", "parent":"62744","spouse": "10289", "spouse_suicide": "no","suicide":"no"},
-{"child":"13406", "parent":"19420","suicide":"no"},
-{"child":"13549", "parent":"32909","spouse": "39539", "spouse_suicide": "no","suicide":"yes"},
-{"child":"13560", "parent":"23766","suicide":"no"},
-{"child":"18254", "parent":"4302","spouse": "18253", "spouse_suicide": "no","suicide":"no"},
-{"child":"42880", "parent":"19420","suicide":"no"},
-{"child":"43043", "parent":"23766","suicide":"no"},
-{"child":"1519", "parent":"5287","spouse": "38236", "spouse_suicide": "no","suicide":"yes"},
-{"child":"6920", "parent":"4139","suicide":"no"},
-{"child":"44521", "parent":"9543","suicide":"no"},
-{"child":"25233", "parent":"61031","spouse": "25232", "spouse_suicide": "no","suicide":"yes"},
-{"child":"38682", "parent":"6457","suicide":"no"},
-{"child":"29729", "parent":"9563","spouse": "29726", "spouse_suicide": "no","suicide":"no"},
-{"child":"36814", "parent":"5287","suicide":"no"},
-{"child":"28318", "parent":"4139","suicide":"no"},
-{"child":"63452", "parent":"4139","suicide":"yes"},
-{"child":"35794", "parent":"9543","suicide":"no"},
-{"child":"61649", "parent":"5287","suicide":"no"},
-{"child":"3236", "parent":"4139","suicide":"no"},
-{"child":"21285", "parent":"35965","spouse": "35820", "spouse_suicide": "no","suicide":"no"},
-{"child":"56523", "parent":"19420","suicide":"yes"},
-{"child":"55791", "parent":"65739","suicide":"no"},
-{"child":"56068", "parent":"5287","suicide":"no"},
-{"child":"57720", "parent":"9543","suicide":"yes"},
-{"child":"53891", "parent":"32909","suicide":"no"},
-{"child":"1820", "parent":"9543","suicide":"no"},
-{"child":"10965", "parent":"6457","suicide":"no"},
-{"child":"51093", "parent":"61031","suicide":"no"},
-{"child":"52167", "parent":"6457","suicide":"no"},
-{"child":"23067", "parent":"23766","suicide":"yes"},
-{"child":"23080", "parent":"23766","suicide":"no"},
-{"child":"25711", "parent":"4139","suicide":"no"},
-{"child":"17930", "parent":"65739","suicide":"no"},
-{"child":"15038", "parent":"32909","suicide":"no"},
-{"child":"5859", "parent":"49266","spouse": "5860", "spouse_suicide": "no","suicide":"no"},
-{"child":"17540", "parent":"17544","suicide":"no"},
-{"child":"26664", "parent":"3405","spouse": "26665", "spouse_suicide": "no","suicide":"no"},
-{"child":"33797", "parent":"36251","spouse": "33796", "spouse_suicide": "no","suicide":"no"},
-{"child":"40963", "parent":"22352","suicide":"no"},
-{"child":"44957", "parent":"22352","suicide":"no"},
-{"child":"32163", "parent":"56402","suicide":"no"},
-{"child":"37881", "parent":"21285","suicide":"no"},
-{"child":"50968", "parent":"22352","spouse": "50967", "spouse_suicide": "no","suicide":"yes"},
-{"child":"56540", "parent":"49073","suicide":"no"},
-{"child":"10288", "parent":"10290","suicide":"no"},
-{"child":"13582", "parent":"35661","spouse": "60738", "spouse_suicide": "no","suicide":"no"},
-{"child":"18252", "parent":"18254","suicide":"no"},
-{"child":"23027", "parent":"29952","spouse": "67449", "spouse_suicide": "no","suicide":"no"},
-{"child":"52509", "parent":"17544","suicide":"no"},
-{"child":"67296", "parent":"49073","suicide":"no"},
-{"child":"1517", "parent":"1519","suicide":"no"},
-{"child":"11872", "parent":"32122","suicide":"no"},
-{"child":"13134", "parent":"58026","spouse": "31262", "spouse_suicide": "no","suicide":"no"},
-{"child":"39401", "parent":"10290","suicide":"no"},
-{"child":"6159", "parent":"18254","suicide":"no"},
-{"child":"10370", "parent":"58026","suicide":"no"},
-{"child":"25231", "parent":"25233","suicide":"no"},
-{"child":"25316", "parent":"21285","spouse": "25312", "spouse_suicide": "no","suicide":"yes"},
-{"child":"36629", "parent":"10290","suicide":"yes"},
-{"child":"38948", "parent":"17544","spouse": "26599", "spouse_suicide": "no","suicide":"yes"},
-{"child":"67284", "parent":"13549","suicide":"no"},
-{"child":"15910", "parent":"18834","suicide":"no"},
-{"child":"29725", "parent":"29729","suicide":"no"},
-{"child":"19847", "parent":"29729","suicide":"no"},
-{"child":"20579", "parent":"17544","suicide":"no"},
-{"child":"38001", "parent":"2240","suicide":"no"},
-{"child":"48533", "parent":"18254","suicide":"yes"},
-{"child":"26090", "parent":"58026","suicide":"yes"},
-{"child":"52797", "parent":"10290","suicide":"no"},
-{"child":"39827", "parent":"29955","spouse": "56933", "spouse_suicide": "no","suicide":"no"},
-{"child":"45020", "parent":"25233","suicide":"yes"},
-{"child":"54343", "parent":"58026","suicide":"no"},
-{"child":"39167", "parent":"49073","suicide":"yes"},
-{"child":"64306", "parent":"13549","suicide":"no"},
-{"child":"5966", "parent":"10290","suicide":"no"},
-{"child":"8491", "parent":"18254","suicide":"no"},
-{"child":"14553", "parent":"13549","suicide":"no"},
-{"child":"15524", "parent":"17544","suicide":"yes"},
-{"child":"43411", "parent":"13549","suicide":"no"},
-{"child":"14621", "parent":"56402","suicide":"yes"},
-{"child":"60900", "parent":"2909","suicide":"yes"},
-{"child":"4843", "parent":"29729","suicide":"no"},
-{"child":"40634", "parent":"2240","suicide":"no"},
-{"child":"55918", "parent":"18254","suicide":"no"},
-{"child":"7836", "parent":"2909","suicide":"no"},
-{"child":"65759", "parent":"1519","suicide":"no"},
-{"child":"28238", "parent":"18254","suicide":"no"},
-{"child":"33052", "parent":"29729","suicide":"no"},
-{"child":"4039", "parent":"20126","spouse": "4040", "spouse_suicide": "no","suicide":"yes"},
-{"child":"53757", "parent":"29729","suicide":"yes"},
-{"child":"7283", "parent":"1519","suicide":"no"},
-{"child":"5673", "parent":"21285","suicide":"no"},
-{"child":"48242", "parent":"49073","suicide":"no"},
-{"child":"4129", "parent":"10290","suicide":"no"},
-{"child":"52375", "parent":"58026","suicide":"no"},
-{"child":"133", "parent":"18834","spouse": "3400", "spouse_suicide": "no","suicide":"yes"},
-{"child":"10451", "parent":"56402","suicide":"no"},
-{"child":"65168", "parent":"56402","suicide":"no"},
-{"child":"25172", "parent":"49073","suicide":"yes"},
-{"child":"19896", "parent":"49073","suicide":"no"},
-{"child":"23338", "parent":"13549","suicide":"no"},
-{"child":"26368", "parent":"56402","suicide":"no"},
-{"child":"6017", "parent":"56402","suicide":"no"},
-{"child":"52789", "parent":"32122","suicide":"yes"},
-{"child":"18487", "parent":"18834","suicide":"no"},
-{"child":"19934", "parent":"24406","suicide":"yes"},
-{"child":"59768", "parent":"58026","suicide":"no"},
-{"child":"12883", "parent":"2909","suicide":"no"},
-{"child":"50595", "parent":"21285","suicide":"no"},
-{"child":"5901", "parent":"2909","suicide":"no"},
-{"child":"26663", "parent":"26664","spouse": "99", "spouse_suicide": "no","suicide":"yes"},
-{"child":"50966", "parent":"50968","suicide":"no"},
-{"child":"13581", "parent":"13582","suicide":"no"},
-{"child":"23026", "parent":"23027","suicide":"no"},
-{"child":"13133", "parent":"13134","suicide":"yes"},
-{"child":"25311", "parent":"25316","suicide":"no"},
-{"child":"25857", "parent":"50968","suicide":"no"},
-{"child":"11014", "parent":"13134","suicide":"no"},
-{"child":"42403", "parent":"25316","suicide":"no"},
-{"child":"31968", "parent":"13582","suicide":"yes"},
-{"child":"66690", "parent":"5859","suicide":"yes"},
-{"child":"17866", "parent":"5859","suicide":"no"},
-{"child":"38846", "parent":"23027","suicide":"no"},
-{"child":"9449", "parent":"23027","suicide":"no"},
-{"child":"384", "parent":"39827","suicide":"no"},
-{"child":"4038", "parent":"4039","suicide":"no"},
-{"child":"37304", "parent":"23027","suicide":"no"},
-{"child":"55771", "parent":"26664","suicide":"no"},
-{"child":"130", "parent":"133","suicide":"no"},
-{"child":"53707", "parent":"4039","suicide":"no"},
-{"child":"1927", "parent":"5859","suicide":"no"},
-{"child":"9568", "parent":"23027","suicide":"yes"},
-{"child":"63630", "parent":"5859","suicide":"no"},
-{"child":"16926", "parent":"39827","suicide":"yes"},
-{"child":"8737", "parent":"13134","suicide":"no"},
-{"child":"16546", "parent":"33797","spouse": "16547", "spouse_suicide": "no","suicide":"no"},
-{"child":"54528", "parent":"133","suicide":"no"},
-{"child":"10407", "parent":"38948","suicide":"no"},
-{"child":"16545", "parent":"16546","suicide":"yes"},
-{"child":"42606", "parent":"26663","suicide":"no"}]; 
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 4){
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 5){
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 6){
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 7){
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 8){
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 9){
-
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }
-            console.log("Informacoes: ");
-            console.log(data);
-    		//console.log(data);
-		    // D3 Tree...
-		/*var dataStructure = d3.stratify()
-		    .id(function(d) {
-		        return d.child;
-		    })
-		    .parentId(function(d) {
-		        return d.parent;
-		    })(data);
-		    console.log("test");
+             
+			
+			d3.json(datasetDirectory).then(function(data){
 
-		// Resizing tree accordingly to data volume.
-		var treeStructure;
-		if (selectedFamily == 1) {
-		    treeStructure = d3.tree().size([2100, 650]);
-		} else if (selectedFamily == 2) {
-		    treeStructure = d3.tree().size([2000, 700]);
-		} else if (selectedFamily == 3) {
-		    treeStructure = d3.tree().size([7000, 1100]);
+                // D3 Tree...
+                var dataStructure = d3.stratify()
+                    .id(function(d) {
+                        return d.child;
+                    })
+                    .parentId(function(d) {
+                        return d.parent;
+                    })(data);
 
-		} else if (selectedFamily == 4) {
+                // Resizing tree accordingly to data volume.
+                var treeStructure;
+                if (selectedFamily == 1) {
+                    treeStructure = d3.tree().size([2100, 650]);
+                } else if (selectedFamily == 2) {
+                    treeStructure = d3.tree().size([2000, 700]);
+                } else if (selectedFamily == 3) {
+                    treeStructure = d3.tree().size([7000, 1100]);
 
-		} else if (selectedFamily == 5) {
+                } else if (selectedFamily == 4) {
 
-		} else if (selectedFamily == 6) {
+                } else if (selectedFamily == 5) {
 
-		} else if (selectedFamily == 7) {
+                } else if (selectedFamily == 6) {
 
-		} else if (selectedFamily == 8) {
+                } else if (selectedFamily == 7) {
 
-		} else if (selectedFamily == 9) {
+                } else if (selectedFamily == 8) {
 
+                } else if (selectedFamily == 9) {
+
+                }
+
+                // D3 Tree...
+                var information = treeStructure(dataStructure);
+                console.log(information.descendants());
+
+                // Connection lines.
+                var connections = svg.append("g").selectAll("path")
+                    .data(information.links());
+                connections.enter().append("path")
+                    .attr("d", function(d) {
+                        return "M" + (d.source.x) + "," + d.source.y + " C " +
+                            d.source.x + "," + (d.source.y + d.target.y) / 2 + " " +
+                            d.target.x + "," + (d.source.y + d.target.y) / 2 + " " +
+                            d.target.x + "," + d.target.y;
+                    })
+                    .attr("opacity", function() {
+                     return 0.3;
+                   
+                 });
+
+                // Show dialogue text on mouse overlay.
+                var tooltip = d3.select("body")
+                    .append("div")
+                    .attr("class", "tooltip-inner") 
+                    .style("background-color", "white")
+                    .style("border", "solid")
+                    .style("border-width", "2px")
+                    .style("border-radius", "5px")
+                    .style("position", "absolute")
+                    .style("padding", "5px")
+                    .style("z-index", "10")
+                    .style("visibility", "hidden");
+
+                // Family member's node.
+                var nodes = svg.append("g").selectAll("circle").data(information.descendants());
+                nodes.enter().append("circle")
+                    .attr("cx", function(d) {
+                        return d.x;
+                    })
+                    .attr("cy", function(d) {
+                        return d.y;
+                    })
+                    .attr("r", 10)
+                     .attr("opacity", function(d) {
+                        if(d.data.suicide != undefined && d.data.suicide == "no" && filterAtributes["non-suicided"] == false
+                            /*|| d.data.depression == "yes" && filterAtributes["depression"]*/){
+                            // etc etc
+                            console.log("hi");
+                            return 0.2;
+                        }
+                        return 1.0;
+                     })                    
+                    .attr("fill", function(d) {
+                        if (d.data.suicide != undefined &&
+                            d.data.suicide == "yes")
+                            return "#e03f54" // Red
+                        else
+                            return "gray";
+                    })
+
+                    // Display information on mouse overlay.
+                    .on("mouseover", function(d) {                        
+                        tooltip.style("visibility", "visible")
+                            .text('ID: ' + d.data.child + " \n" +
+                                'PARENT: ' + d.data.parent)
+                    })
+                    .on("mousemove", function() {
+                        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+                    })
+                    .on("mouseout", function() {
+                        return tooltip.style("visibility", "hidden");
+
+                    });;
+
+                // Spouse nodes.
+                var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
+                spouseNodes.enter().append("circle")
+                    .attr("cx", function(d) {
+                        return d.x + 30;
+                    })
+                    .attr("cy", function(d) {
+                        return d.y;
+                    })
+                    .attr("r", 10)
+                    .classed("hide", function(d) {
+                        if (d.data.spouse == undefined)
+                            return true;
+                        else
+                            return false;
+                    })
+
+                    .attr("opacity", function() {
+                     return 0.2;
+                    })
+                    .attr("fill", function(d) {
+                        if (d.data.spouse != undefined &&
+                            d.data.spouse_suicide == "yes")
+                            return "#e03f54" // Red
+                        else
+                            return "#474747"; // Dark gray
+                    })
+                    .on("mouseover", function(d) {
+                        tooltip.style("visibility", "visible")
+                            .text('ID: ' + d.data.spouse)
+                    })
+                    .on("mousemove", function() {
+                        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+                    })
+                    .on("mouseout", function() {
+                        return tooltip.style("visibility", "hidden");
+
+                    });
+
+                // Family members names.
+                var names = svg.append("g").selectAll("text").data(information.descendants());
+                names.enter().append("text")
+                    .text(function(d) {
+                        return d.data.child;
+                    })
+                    .attr("x", function(d) {
+                        return d.x - 0;
+                    })
+                    .attr("y", function(d) {
+                        return d.y - 15;
+                    })
+                    .classed("bigger", true);
+                //  }
+
+                // Spouses names.
+                var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
+                spouseNames.enter().append("text")
+                    .text(function(d) {
+                        return d.data.spouse;
+                    })
+                    .attr("x", function(d) {
+                        return d.x + 30;
+                    })
+                    .attr("y", function(d) {
+                        return d.y + 25;
+                    })
+                    .classed("bigger", true);
+      
+			  });		
 		}
-
-		// D3 Tree...
-		var information = treeStructure(dataStructure);
-		console.log(information.descendants());
-
-		// Connection lines.
-		var connections = svg.append("g").selectAll("path")
-		    .data(information.links());
-		connections.enter().append("path")
-		    .attr("d", function(d) {
-		        return "M" + (d.source.x) + "," + d.source.y + " C " +
-		            d.source.x + "," + (d.source.y + d.target.y) / 2 + " " +
-		            d.target.x + "," + (d.source.y + d.target.y) / 2 + " " +
-		            d.target.x + "," + d.target.y;
-		    });
-
-		// Show dialogue text on mouse overlay.
-		var tooltip = d3.select("body")
-		    .append("div")
-		    .attr("class", "tooltip-inner") 
-		    .style("background-color", "white")
-		    .style("border", "solid")
-		    .style("border-width", "2px")
-		    .style("border-radius", "5px")
-		    .style("position", "absolute")
-		    .style("padding", "5px")
-		    .style("z-index", "10")
-		    .style("visibility", "hidden");
-
-		// Family member's node.
-		var nodes = svg.append("g").selectAll("circle").data(information.descendants());
-		nodes.enter().append("circle")
-		    .attr("cx", function(d) {
-		        return d.x;
-		    })
-		    .attr("cy", function(d) {
-		        return d.y;
-		    })
-		    .attr("r", 10)
-		    // .attr("opacity", function() {
-		    // 	return 0.5;
-		    // })
-		    .attr("fill", function(d) {
-		        if (d.data.suicide != undefined &&
-		            d.data.suicide == "yes")
-		            return "red"
-		        else
-		            return "gray";
-		    })
-
-		    // Display information on mouse overlay.
-		    .on("mouseover", function(d) {
-		        tooltip.style("visibility", "visible")
-		            .text('ID: ' + d.data.child + " \n" +
-		                'PARENT: ' + d.data.parent)
-		    })
-		    .on("mousemove", function() {
-		        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
-		    })
-		    .on("mouseout", function() {
-		        return tooltip.style("visibility", "hidden");
-
-		    });;
-
-		// Spouse nodes.
-		var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
-		spouseNodes.enter().append("circle")
-		    .attr("cx", function(d) {
-		        return d.x + 30;
-		    })
-		    .attr("cy", function(d) {
-		        return d.y;
-		    })
-		    .attr("r", 10)
-		    .classed("hide", function(d) {
-		        if (d.data.spouse == undefined)
-		            return true;
-		        else
-		            return false;
-		    })
-
-		    // .attr("opacity", function() {
-		    // 	return 0.5;
-		    // })
-		    .attr("fill", function(d) {
-		        if (d.data.spouse != undefined &&
-		            d.data.spouse_suicide == "yes")
-		            return "red"
-		        else
-		            return "black";
-		    })
-		    // Display information on mouse overlay.
-		    .on("mouseover", function(d) {
-		        tooltip.style("visibility", "visible")
-		            .text('ID: ' + d.data.spouse)
-		    })
-		    .on("mousemove", function() {
-		        return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
-		    })
-		    .on("mouseout", function() {
-		        return tooltip.style("visibility", "hidden");
-
-		    });
-
-		// Family members names.
-		// if(selectedFamily != 3){
-		var names = svg.append("g").selectAll("text").data(information.descendants());
-		names.enter().append("text")
-		    .text(function(d) {
-		        return d.data.child;
-		    })
-		    .attr("x", function(d) {
-		        return d.x - 0;
-		    })
-		    .attr("y", function(d) {
-		        return d.y - 15;
-		    })
-		    .classed("bigger", true);
-		//  }
-
-		// Spouses names.
-		// if(selectedFamily != 3){
-		var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
-		spouseNames.enter().append("text")
-		    .text(function(d) {
-		        return d.data.spouse;
-		    })
-		    .attr("x", function(d) {
-		        return d.x + 30;
-		    })
-		    .attr("y", function(d) {
-		        return d.y + 25;
-		    })
-		    .classed("bigger", true);
-		//  }
-		*/
-		}
-		
 	</script>
 </body>
 </html>

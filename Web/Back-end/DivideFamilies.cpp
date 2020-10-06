@@ -7,7 +7,7 @@
 #include <set>
 
 #define DatasetDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesStructure.csv"
-#define AtributesDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesAttributes.csv"
+#define AtributesDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesAttributes2.csv"
 
 #define OutputDirectory "/home/geflx/github/data-visualization-challenge/Web/Back-end/Family_JSON/"
 #define MAX_GENERATIONS 1000
@@ -20,6 +20,34 @@ struct Person{
 		ID = -1, familyID = -1, motherID = -1, deathYear = -1;
 		fatherID = -1, gen = -1, age = -1, birthYear = -1;
 		sex = 'e', deceased = 'e', suicide = 'e';
+	}
+};
+
+struct Atributes{
+	bool depression, eating, alcohol, somaticDisorder,
+		 obesity, psychosis, bipolar, interpersonalTrauma,
+		 personalityDisorder, anxiety, asthma, emotional,
+		 COPD, impulseControl, cardiovascular, autoimmune;
+
+	std::string deathCause;
+
+	Atributes(){
+		depression = false;
+		eating = false;
+		alcohol = false;
+		somaticDisorder = false;
+		obesity = false;
+		psychosis = false;
+		bipolar = false;
+		interpersonalTrauma = false;
+		personalityDisorder = false;
+		anxiety = false;
+		asthma = false;
+		emotional = false;
+		COPD = false;
+		impulseControl = false;
+		cardiovascular = false;
+		autoimmune = false;
 	}
 };
 
@@ -110,8 +138,8 @@ void readDataset(std::vector<std::string> &fields, std::vector<Family> &dataset,
 }
 
 void printDatasetRaw(const std::vector<Family> &dataset){
-	// Print dataset raw content.
 
+	// Print dataset raw content.
 	for(int i = 0; i < dataset.size(); i++)
 		for (int j = 0; j < dataset[i].vec.size(); j++)
 			std::cout << dataset[i].vec[j].ID << "," << 
@@ -128,7 +156,75 @@ void printDatasetRaw(const std::vector<Family> &dataset){
 	return;
 }
 
-void printFamilyFiles(const std::vector<Family> &dataset){
+void readAtributes(std::map<int, Atributes> mapAtributes){
+
+	std::ifstream input(AtributesDirectory);
+
+	std::string line, token;
+
+	// Reading first line.
+	getline(input, line);
+
+	// Reading remaining lines
+	std::stringstream s_stream(line);
+	while(getline(input, line)){
+		std::stringstream s_stream_two(line);
+
+		Person tmp;
+		int c_field = 0;
+
+		int personID;
+
+		while(std::getline(s_stream_two, token, ',')){
+
+			if(!token.empty()){
+				if(c_field == 1){
+					personID = std::stoi(token);
+				}else if(c_field == 7){ // Death cause
+					mapAtributes[personID].deathCause = token;
+				}else if(c_field == 11){
+					mapAtributes[personID].alcohol = token == "1"? true : false;
+				}else if(c_field == 14){
+					mapAtributes[personID].psychosis = token == "1"? true : false;
+				}else if(c_field == 17){
+					mapAtributes[personID].anxiety = token == "1"? true : false;
+				}else if(c_field == 20){
+					mapAtributes[personID].somaticDisorder = token == "1"? true : false;
+				}else if(c_field == 23){
+					mapAtributes[personID].eating = token == "1"? true : false;
+				}else if(c_field == 26){
+					mapAtributes[personID].bipolar = token == "1"? true : false;
+				}else if(c_field == 29){
+					mapAtributes[personID].depression = token == "1"? true : false;
+				}else if(c_field == 32){
+					mapAtributes[personID].interpersonalTrauma = token == "1"? true : false;
+				}else if(c_field == 35){
+					mapAtributes[personID].anxiety = token == "1"? true : mapAtributes[personID].anxiety;
+				}else if(c_field == 38){
+					mapAtributes[personID].emotional = token == "1"? true : false;
+				}else if(c_field == 41){
+					mapAtributes[personID].personalityDisorder = token == "1"? true : false;
+				}else if(c_field == 44){
+					mapAtributes[personID].impulseControl = token == "1"? true : false;
+				}else if(c_field == 47){
+					mapAtributes[personID].obesity = token == "1"? true : false;
+				}else if(c_field == 50){
+					mapAtributes[personID].cardiovascular = token == "1"? true : false;
+				}else if(c_field == 53){
+					mapAtributes[personID].COPD = token == "1"? true : false;
+				}else if(c_field == 56){
+					mapAtributes[personID].asthma = token == "1"? true : false;
+				}else if(c_field == 59){
+					mapAtributes[personID].autoimmune = token == "1"? true : false;
+				}
+			}
+			c_field++;
+		}
+	}
+	return;
+}
+
+void printFamilyFiles(const std::vector<Family> &dataset, const std::map<int, Atributes> &mapAtributes){
 	for(int i = 0; i < dataset.size(); i++){
 
 		// Create output file.
@@ -204,33 +300,7 @@ void printFamilyFiles(const std::vector<Family> &dataset){
 							std::cout << "Parents weren't printed in tree. Aborting ... ";
 							exit(0);
 						}
-						/*
-						// The D3's parent field will have a non-outsider parent.
-						bool father_is_outsider = outsiders.find(dataset[i].vec[j].fatherID) == outsiders.end() ? false : true;
-						bool mother_is_outsider = outsiders.find(dataset[i].vec[j].motherID) == outsiders.end() ? false : true;
-
-						if(!father_is_outsider && !mother_is_outsider){
-
-							// Special case: IDs 23883, 3388 ... (Only one parent is specified, then print the known one).
-							int knownParent = -1;
-							if(dataset[i].vec[j].fatherID != -1)
-								knownParent = dataset[i].vec[j].fatherID;
-							else
-								knownParent = dataset[i].vec[j].motherID;
-
-							outFile << " \"parent\":\"" << knownParent << "\",";
-
-						}else if(!father_is_outsider || !mother_is_outsider){
-							if(!father_is_outsider){
-								outFile << " \"parent\":\""<< dataset[i].vec[j].fatherID << "\",";
-							}else{ // !mother_is_outsider
-								outFile << " \"parent\":\""<< dataset[i].vec[j].motherID << "\",";
-							}
-						}else{
-							std::cout << "Unusual error. Aborting.\n";
-							std::cout << "\n\n";
-						}	*/
-
+			
 						// Print spouse information if married.
 						if(marriage[dataset[i].vec[j].ID] != 0){
 							int spouse = marriage[dataset[i].vec[j].ID];
@@ -280,7 +350,9 @@ int main(){
 
 	readDataset(fields, dataset, mapFamily, c_mapFamily);
 	
-	//printDatasetRaw(dataset);
+	std::map<int, Atributes> mapAtributes;
 
-	printFamilyFiles(dataset);
+	readAtributes(mapAtributes);
+
+	printFamilyFiles(dataset, mapAtributes);
 }
