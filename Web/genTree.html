@@ -3,72 +3,44 @@
 <head>
 	<title>Family Tree</title>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
-	<style>
-     /*   p {
-          font-family: "Arial", "Helvetica", serif;
-        }*/
-        .header {
-          padding: 10px;
-          text-align: center;
-          background: #0F0F4A;
-          color: white;
-          font-size: 15px;
-        }
-        .tooltip-inner{
-		    white-space: pre-line; 
-        }		path{
-			fill: none;
-			stroke: gray;
-			stroke-width: 1.5;
-		}
-		text{
-			dominant-baseline: middle;
-			text-anchor: middle;
-		}
-		.bigger{
-			font-size: 14px;
-		}
-		#details
-		{
-			position: absolute;
-			left: 320px;
-			top: 120px;
-			width: 200px;
-			height: 50px;
-			background: gray;
-			color: black;
-			visibility: hidden;
-			border-radius: 15px;
-			text-align: center;
-			padding: 15px;
-			font-size: 20px;
-		}
-		.hide{
-			visibility: hidden;
-		}
-
-	</style>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
 </head>
 <body>
-    <div class="header">
+    <div class="wrapper">
+    <div class="sidebar">
+        <h2>BioVis 2020 Challenge</h2>
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="#"><i class="fas fa-book"></i>Problem Description</a>
+            <li><a href="#"><i class="fas fa-cubes"></i>Dataset</a></li></li>
+            <li><a href="genTree.html"><i class="fas fa-book"></i>Genealogic Trees</a>
+            <li><a href="#"><i class="fas fa-object-group"></i>Graphics</a></li>
+        </ul> 
+        <div class="social_media">
+          <a href="#"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+    <div class="main_content">
+         <div class="header">
         <b><p style="font-size: 20px">Select family:</p></b> 
-		<form id="familyDetails">
-	        <select id="familyComboBox">
-	            <option value=""></option>
-	            <option value="1">One   (small)</option>
-	            <option value="2">Two   (small)</option>
-	            <option value="3">Three (very big)</option>
-	            <option value="4">Four  (very small)</option>
-	            <option value="5">Five  (big)</option>
-	            <option value="6">Six   (very big)</option>
-	            <option value="7">Seven (medium)</option>
-	            <option value="8">Eight (small)</option>
-	            <option value="9">Nine  (very small)</option>
-	        </select>
+        <form id="familyDetails">
+            <select id="familyComboBox">
+                <option value=""></option>
+                <option value="1">One (Small) - ID 38</option>
+                <option value="2">Two (Small) - ID 149</option>
+                <option value="3">Three (Very Large) - ID 27251</option>
+                <option value="4">Four (Very Small) - ID 42623</option>
+                <option value="5">Five (Large) - ID 68939</option>
+                <option value="6">Six (Very Large) - ID 176860</option>
+                <option value="7">Seven (Medium) - ID 603481</option>
+                <option value="8">Eight (Small) - ID 791533</option>
+                <option value="9">Nine (Very Small) - ID 903988</option>
+            </select>
         </form>        
     </div>  
-    	
-    	</br>
+        
+        </br>
         <table>
           <tr>
             <th>Filters</th>
@@ -77,8 +49,8 @@
           <tr>
             <td><input type="checkbox" id="cbNotSuicided" checked="checked" class="cbox"> Not suicided</td>
             <td rowspan="4"><p id="familyDetailsText"> Family additional details will be shown here. </p>
-        	</br><b>Note</b>: The above elements of the three weren't printed due to tree's structure (such as duplicated spouses) or lack of parent information in dataset.
-        	</td>
+            </br><b>Note</b>: The above elements of the three weren't printed due to tree's structure (such as duplicated spouses) or lack of parent information in dataset.
+            </td>
           </tr>
           <tr>
             <td><input type="checkbox" id="cbDepression" checked="checked" class="cbox"> Depression</td>
@@ -130,14 +102,14 @@
             <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease<td>
           </tr>
         </table>
-	<script>
-        
-		// Family additional details.
-		var familyCodes = {
-		    1: "Duplicated spouses: 44862 e 49224. </br> No parent information: 60064 e 37544. </br> Duplicated information in dataset: 40788 (didn't suicide)",
-		    2: 12,
-		    3: 13
-		};
+    <script>
+             
+        // Family additional details.
+        var familyCodes = {
+            1: "Duplicated spouses: 44862 e 49224. </br> No parent information: 60064 e 37544. </br> Duplicated information in dataset: 40788 (didn't suicide)",
+            2: "aparece esse texto",
+            3: 13
+        };
 
         // Refresh page when changing checbox or combo box.
         d3.select("#familyComboBox").on("change",update);
@@ -149,7 +121,7 @@
         var data = [];
         var svg;
 
-		var selectedFamily = "";
+        var selectedFamily = "";
 
         var filterAtributes = {
             "non-suicided": true,
@@ -174,7 +146,7 @@
         function update() {
 
             filterAtributes["non-suicided"] = d3.select("#cbNotSuicided").property("checked");
-            filterAtributes["depression"] = d3.select("#cbDepression").property("checked");
+            filterAtributes["depression"] = d3.select("#cbDepression").property("checked"); 
             filterAtributes["eating"] = d3.select("#cbEating").property("checked");
             filterAtributes["alcohol"] = d3.select("#cbAlcohol").property("checked");
             filterAtributes["somatic-disorder"] = d3.select("#cbSomaticDisorder").property("checked");
@@ -194,19 +166,19 @@
 
             console.log(filterAtributes["non-suicided"]);
 
-        	var tmp = document.getElementById("familyComboBox");
-  			var selectedFamily = tmp.options[tmp.selectedIndex].value;
-  			console.log(selectedFamily);
+            var tmp = document.getElementById("familyComboBox");
+            var selectedFamily = tmp.options[tmp.selectedIndex].value;
+            console.log(selectedFamily);
         
 
-        	document.getElementById("familyDetailsText").innerHTML = familyCodes[selectedFamily];
+            document.getElementById("familyDetailsText").innerHTML = familyCodes[selectedFamily];
 
             if(print > 0){
                 svg.selectAll('*').remove();
             }else{
                 svg = d3.select("body").append("svg")
                         .attr("width", 6000).attr("height", 2000) // Page sizes.
-                        .append("g").attr("transform", "translate(0, 50)");
+                        .append("g").attr("transform", "translate(250, 50)");
             }
     
             if(selectedFamily != 0)
@@ -237,8 +209,8 @@
                 datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }
              
-			
-			d3.json(datasetDirectory).then(function(data){
+            
+            d3.json(datasetDirectory).then(function(data){
 
                 // D3 Tree...
                 var dataStructure = d3.stratify()
@@ -332,7 +304,8 @@
                     })
 
                     // Display information on mouse overlay.
-                    .on("mouseover", function(d) {                        
+                    .on("mouseover", function(d) {            
+
                         tooltip.style("visibility", "visible")
                             .text('ID: ' + d.data.child + " \n" +
                                 'PARENT: ' + d.data.parent)
@@ -413,8 +386,12 @@
                     })
                     .classed("bigger", true);
       
-			  });		
-		}
-	</script>
+              });       
+        }
+    </script>
+    </div>
+</div>
+
+   
 </body>
 </html>
