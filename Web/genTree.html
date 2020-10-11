@@ -47,7 +47,7 @@
             <th>Family Information</th>
           </tr>
           <tr>
-            <td><input type="checkbox" id="cbNotSuicided" checked="checked" class="cbox"> Not suicided</td>
+            <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease</td>
             <td rowspan="4"><p id="familyDetailsText"> Family additional details will be shown here. </p>
             </br><b>Note</b>: The above elements of the three weren't printed due to tree's structure (such as duplicated spouses) or lack of parent information in dataset.
             </td>
@@ -81,7 +81,11 @@
             <td><input type="checkbox" id="cbPD" checked="checked" class="cbox"> Personality Disorder</td>
           </tr>
            <tr>
-            <td><input type="checkbox" id="cbAnxiety" checked="checked" class="cbox"> Anxiety<td>
+            <td><input type="checkbox" id="cbAnxietyNonTrauma" checked="checked" class="cbox"> Anxiety Non-Trauma<td>
+          </tr>
+
+           <tr>
+            <td><input type="checkbox" id="cbAnxietyPD" checked="checked" class="cbox"> Anxiety Personality Disorder<td>
           </tr>
            <tr>
             <td><input type="checkbox" id="cbEmotional" checked="checked" class="cbox"> Emotional<td>
@@ -97,9 +101,6 @@
           </tr>
            <tr>
             <td><input type="checkbox" id="cbCardiovascular" checked="checked" class="cbox"> Cardiovascular Disease<td>
-          </tr>
-           <tr>
-            <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease<td>
           </tr>
         </table>
     <script>
@@ -124,47 +125,49 @@
         var selectedFamily = "";
 
         var filterAtributes = {
-            "non-suicided": true,
+            // "nonSuicided": true,
             "depression": true,
             "eating": true,
             "alcohol": true,
-            "somatic-disorder": true,
+            "somaticDisorder": true,
             "obesity": true,
             "psychosis": true,
             "bipolar": true,
-            "personality-disorder": true,
-            "anxiety": true,
+            "personalityDisorder": true,
+            "anxietyPD": true,
+            "anxietyNonTrauma": true,
             "emotional": true,
-            "interpersonal-trauma": true,
+            "interpersonalTrauma": true,
             "asthma": true,
-            "copd": true,
+            "COPD": true,
             "autoimmune": true,
             "cardiovascular": true,
-            "impulse": true
+            "impulseControl": true
          }
 
         function update() {
 
-            filterAtributes["non-suicided"] = d3.select("#cbNotSuicided").property("checked");
+            // filterAtributes["nonSuicided"] = d3.select("#cbNotSuicided").property("checked");
             filterAtributes["depression"] = d3.select("#cbDepression").property("checked"); 
             filterAtributes["eating"] = d3.select("#cbEating").property("checked");
             filterAtributes["alcohol"] = d3.select("#cbAlcohol").property("checked");
-            filterAtributes["somatic-disorder"] = d3.select("#cbSomaticDisorder").property("checked");
+            filterAtributes["somaticDisorder"] = d3.select("#cbSomaticDisorder").property("checked");
             filterAtributes["obesity"] = d3.select("#cbObesity").property("checked");
             filterAtributes["psychosis"] = d3.select("#cbPsychosis").property("checked");
             filterAtributes["bipolar"] = d3.select("#cbBipolar").property("checked");
-            filterAtributes["interpersonal-trauma"] = d3.select("#cbTrauma").property("checked");
-            filterAtributes["personality-disorder"] = d3.select("#cbPD").property("checked");
-            filterAtributes["anxiety"] = d3.select("#cbAnxiety").property("checked");
+            filterAtributes["interpersonalTrauma"] = d3.select("#cbTrauma").property("checked");
+            filterAtributes["personalityDisorder"] = d3.select("#cbPD").property("checked");
+            filterAtributes["anxietyPD"] = d3.select("#cbAnxietyPD").property("checked");
+            filterAtributes["anxietyNonTrauma"] = d3.select("#cbAnxietyNonTrauma").property("checked");
             filterAtributes["emotional"] = d3.select("#cbEmotional").property("checked");
             filterAtributes["asthma"] = d3.select("#cbAsthma").property("checked");
-            filterAtributes["copd"] = d3.select("#cbCOPD").property("checked");
+            filterAtributes["COPD"] = d3.select("#cbCOPD").property("checked");
             filterAtributes["autoimmune"] = d3.select("#cbAutoimmune").property("checked");
             filterAtributes["cardiovascular"] = d3.select("#cbCardiovascular").property("checked");
-            filterAtributes["impulse"] = d3.select("#cbImpulse").property("checked");
+            filterAtributes["impulseControl"] = d3.select("#cbImpulse").property("checked");
 
 
-            console.log(filterAtributes["non-suicided"]);
+            console.log(filterAtributes["nonSuicided"]);
 
             var tmp = document.getElementById("familyComboBox");
             var selectedFamily = tmp.options[tmp.selectedIndex].value;
@@ -190,7 +193,7 @@
             if(selectedFamily == 0){
                 data = [];
             }else if(selectedFamily == 1){
-                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/temp.json";
             }else if(selectedFamily == 2){
                 datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 3){
@@ -200,7 +203,7 @@
             }else if(selectedFamily == 5){
                 datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 6){
-                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+                datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/f6.json";
             }else if(selectedFamily == 7){
                 datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
             }else if(selectedFamily == 8){
@@ -278,6 +281,7 @@
 
                 // Family member's node.
                 var nodes = svg.append("g").selectAll("circle").data(information.descendants());
+
                 nodes.enter().append("circle")
                     .attr("cx", function(d) {
                         return d.x;
@@ -285,16 +289,38 @@
                     .attr("cy", function(d) {
                         return d.y;
                     })
-                    .attr("r", 10)
-                     .attr("opacity", function(d) {
-                        if(d.data.suicide != undefined && d.data.suicide == "no" && filterAtributes["non-suicided"] == false
-                            /*|| d.data.depression == "yes" && filterAtributes["depression"]*/){
-                            // etc etc
-                            console.log("hi");
-                            return 0.2;
+                    .attr("opacity", function(d) {
+                        // Highlight node if it has at least one of the filters checked
+                        if((d.data.alcohol == "1" && filterAtributes["alcohol"] == true)
+                            || (d.data.somaticDisorder == "1" && filterAtributes["somaticDisorder"] == true)
+                            || (d.data.psychosis == "1" && filterAtributes["psychosis"] == true)
+                            || (d.data.eating == "1" && filterAtributes["eating"] == true)
+                            || (d.data.bipolar == "1" && filterAtributes["bipolar"] == true)
+                            || (d.data.depression == "1" && filterAtributes["depression"] == true)
+                            || (d.data.interpersonalTrauma == "1" && filterAtributes["interpersonalTrauma"] == true)
+                            || (d.data.emotional == "1" && filterAtributes["emotional"] == true)
+                            || (d.data.personalityDisorder == "1" && filterAtributes["personalityDisorder"] == true)
+                            || (d.data.impulseControl == "1" && filterAtributes["impulseControl"] == true)
+                            || (d.data.obesity == "1" && filterAtributes["obesity"] == true)
+                            || (d.data.cardiovascular == "1" && filterAtributes["cardiovascular"] == true)
+                            || (d.data.COPD == "1" && filterAtributes["COPD"] == true)
+                            || (d.data.asthma == "1" && filterAtributes["asthma"] == true)
+                            || (d.data.autoimmune == "1" && filterAtributes["autoimmune"] == true)
+                            || (d.data.anxietyPD == "1" && filterAtributes["anxietyPD"] == true)
+                            || (d.data.anxietyNonTrauma == "1" && filterAtributes["anxietyNonTrauma"] == true)){
+                            console.log("awww yes!");
+                            return 1.0;
                         }
-                        return 1.0;
-                     })                    
+                        return 0.6;
+                        
+                     })     
+                    .attr("r", function(d){
+                        if(d3.select(this).attr("opacity") == 1.0){
+                            return 12.5;
+                        }else{
+                            return 10;
+                        }
+                    })
                     .attr("fill", function(d) {
                         if (d.data.suicide != undefined &&
                             d.data.suicide == "yes")
@@ -306,9 +332,61 @@
                     // Display information on mouse overlay.
                     .on("mouseover", function(d) {            
 
+                        var outputText = "ID: " + d.data.child + "\n";
+                        if(d.data.alcohol == "1"){
+                            outputText += "Alcohol\n";
+                        }
+                        if(d.data.somaticDisorder == "1"){
+                            outputText += "Somatic_Disorder\n";
+                        }
+                        if(d.data.psychosis == "1"){
+                            outputText += "Psychosis\n";
+                        }
+                        if(d.data.eating == "1"){
+                            outputText += "Eating\n";
+                        }
+                        if(d.data.bipolar == "1"){
+                            outputText += "Bipolar\n";
+                        }
+                        if(d.data.depression == "1"){
+                            outputText += "Depression\n";
+                        }
+                        if(d.data.interpersonalTrauma == "1"){
+                            outputText += "Interpersonal_Trauma\n";
+                        }
+                        if(d.data.emotional == "1"){
+                            outputText += "Emotional\n";
+                        }
+                        if(d.data.personalityDisorder == "1"){
+                            outputText += "Personality_Disorder\n";
+                        }
+                        if(d.data.impulseControl == "1"){
+                            outputText += "Impulse Control Disorder\n";
+                        }
+                        if(d.data.obesity == "1"){
+                            outputText += "Obesity\n";
+                        }
+                        if(d.data.cardiovascular == "1"){
+                            outputText += "Cardiovascular\n";
+                        }
+                        if(d.data.COPD == "1"){
+                            outputText += "COPD\n";
+                        }
+                        if(d.data.asthma == "1"){
+                            outputText += "Asthma\n";
+                        }
+                        if(d.data.autoimmune == "1"){
+                            outputText += "Autoimmune_Disease\n";
+                        }
+                        if(d.data.anxietyPD == "1"){
+                            outputText += "Anxiety_Personality_Disorder\n";
+                        }
+                        if(d.data.anxietyNonTrauma == "1"){
+                            outputText += "Anxiety_Non_Trauma\n";
+                        }
+
                         tooltip.style("visibility", "visible")
-                            .text('ID: ' + d.data.child + " \n" +
-                                'PARENT: ' + d.data.parent)
+                            .text(outputText)
                     })
                     .on("mousemove", function() {
                         return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
@@ -327,16 +405,42 @@
                     .attr("cy", function(d) {
                         return d.y;
                     })
-                    .attr("r", 10)
                     .classed("hide", function(d) {
                         if (d.data.spouse == undefined)
                             return true;
                         else
                             return false;
                     })
-
-                    .attr("opacity", function() {
-                     return 0.2;
+                    .attr("opacity", function(d) {
+                        // Highlight node if it has at least one of the filters checked
+                        if((d.data.spouse_alcohol == "1" && filterAtributes["alcohol"] == true)
+                            || (d.data.spouse_somaticDisorder == "1" && filterAtributes["somaticDisorder"] == true)
+                            || (d.data.spouse_psychosis == "1" && filterAtributes["psychosis"] == true)
+                            || (d.data.spouse_eating == "1" && filterAtributes["eating"] == true)
+                            || (d.data.spouse_bipolar == "1" && filterAtributes["bipolar"] == true)
+                            || (d.data.spouse_depression == "1" && filterAtributes["depression"] == true)
+                            || (d.data.spouse_interpersonalTrauma == "1" && filterAtributes["interpersonalTrauma"] == true)
+                            || (d.data.spouse_emotional == "1" && filterAtributes["emotional"] == true)
+                            || (d.data.spouse_personalityDisorder == "1" && filterAtributes["personalityDisorder"] == true)
+                            || (d.data.spouse_impulseControl == "1" && filterAtributes["impulseControl"] == true)
+                            || (d.data.spouse_obesity == "1" && filterAtributes["obesity"] == true)
+                            || (d.data.spouse_cardiovascular == "1" && filterAtributes["cardiovascular"] == true)
+                            || (d.data.spouse_COPD == "1" && filterAtributes["COPD"] == true)
+                            || (d.data.spouse_asthma == "1" && filterAtributes["asthma"] == true)
+                            || (d.data.spouse_autoimmune == "1" && filterAtributes["autoimmune"] == true)
+                            || (d.data.spouse_anxietyPD == "1" && filterAtributes["anxietyPD"] == true)
+                            || (d.data.spouse_anxietyNonTrauma == "1" && filterAtributes["anxietyNonTrauma"] == true)){
+                            return 1.0;
+                        }
+                        return 0.6;
+                        
+                     })     
+                    .attr("r", function(d){
+                        if(d3.select(this).attr("opacity") == 1.0){
+                            return 12.5;
+                        }else{
+                            return 10;
+                        }
                     })
                     .attr("fill", function(d) {
                         if (d.data.spouse != undefined &&
@@ -346,8 +450,61 @@
                             return "#474747"; // Dark gray
                     })
                     .on("mouseover", function(d) {
+
+                        var outputText = "ID: " + d.data.spouse + "\n";
+                        if(d.data.spouse_alcohol == "1"){
+                            outputText += "Alcohol\n";
+                        }
+                        if(d.data.spouse_somaticDisorder == "1"){
+                            outputText += "Somatic_Disorder\n";
+                        }
+                        if(d.data.spouse_psychosis == "1"){
+                            outputText += "Psychosis\n";
+                        }
+                        if(d.data.spouse_eating == "1"){
+                            outputText += "Eating\n";
+                        }
+                        if(d.data.spouse_bipolar == "1"){
+                            outputText += "Bipolar\n";
+                        }
+                        if(d.data.spouse_depression == "1"){
+                            outputText += "Depression\n";
+                        }
+                        if(d.data.spouse_interpersonalTrauma == "1"){
+                            outputText += "Interpersonal_Trauma\n";
+                        }
+                        if(d.data.spouse_emotional == "1"){
+                            outputText += "Emotional\n";
+                        }
+                        if(d.data.spouse_personalityDisorder == "1"){
+                            outputText += "Personality_Disorder\n";
+                        }
+                        if(d.data.spouse_impulseControl == "1"){
+                            outputText += "Impulse Control Disorder\n";
+                        }
+                        if(d.data.spouse_obesity == "1"){
+                            outputText += "Obesity\n";
+                        }
+                        if(d.data.spouse_cardiovascular == "1"){
+                            outputText += "Cardiovascular\n";
+                        }
+                        if(d.data.spouse_COPD == "1"){
+                            outputText += "COPD\n";
+                        }
+                        if(d.data.spouse_asthma == "1"){
+                            outputText += "Asthma\n";
+                        }
+                        if(d.data.spouse_autoimmune == "1"){
+                            outputText += "Autoimmune_Disease\n";
+                        }
+                        if(d.data.spouse_anxietyPD == "1"){
+                            outputText += "Anxiety_Personality_Disorder\n";
+                        }
+                        if(d.data.spouse_anxietyNonTrauma == "1"){
+                            outputText += "Anxiety_Non_Trauma\n";
+                        }
                         tooltip.style("visibility", "visible")
-                            .text('ID: ' + d.data.spouse)
+                            .text(outputText)
                     })
                     .on("mousemove", function() {
                         return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");

@@ -5,6 +5,9 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <assert.h>
+#include <algorithm>
+
 
 #define DatasetDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesStructure.csv"
 #define AtributesDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesAttributes2.csv"
@@ -26,7 +29,7 @@ struct Person{
 struct Atributes{
 	bool depression, eating, alcohol, somaticDisorder,
 		 obesity, psychosis, bipolar, interpersonalTrauma,
-		 personalityDisorder, anxiety, asthma, emotional,
+		 personalityDisorder, anxietyPD, anxietyNonTrauma, asthma, emotional,
 		 COPD, impulseControl, cardiovascular, autoimmune;
 
 	std::string deathCause;
@@ -41,7 +44,8 @@ struct Atributes{
 		bipolar = false;
 		interpersonalTrauma = false;
 		personalityDisorder = false;
-		anxiety = false;
+		anxietyPD = false;
+		anxietyNonTrauma = false;
 		asthma = false;
 		emotional = false;
 		COPD = false;
@@ -156,7 +160,7 @@ void printDatasetRaw(const std::vector<Family> &dataset){
 	return;
 }
 
-void readAtributes(std::map<int, Atributes> mapAtributes){
+void readAtributes(std::map<int, Atributes> &mapAtributes){
 
 	std::ifstream input(AtributesDirectory);
 
@@ -177,17 +181,24 @@ void readAtributes(std::map<int, Atributes> mapAtributes){
 
 		while(std::getline(s_stream_two, token, ',')){
 
+			std::cout << "c_field is " << c_field << " and token is ";
 			if(!token.empty()){
+				std::cout << token << "\n";
 				if(c_field == 1){
 					personID = std::stoi(token);
+					std::cout << "personID is " << personID << "\n";
 				}else if(c_field == 7){ // Death cause
-					mapAtributes[personID].deathCause = token;
+
+					std::string my_str = token;
+					my_str.erase(std::remove(my_str.begin(), my_str.end(), '"'), my_str.end());
+					mapAtributes[personID].deathCause = my_str;
+
 				}else if(c_field == 11){
 					mapAtributes[personID].alcohol = token == "1"? true : false;
 				}else if(c_field == 14){
 					mapAtributes[personID].psychosis = token == "1"? true : false;
 				}else if(c_field == 17){
-					mapAtributes[personID].anxiety = token == "1"? true : false;
+					mapAtributes[personID].anxietyNonTrauma = token == "1"? true : false;
 				}else if(c_field == 20){
 					mapAtributes[personID].somaticDisorder = token == "1"? true : false;
 				}else if(c_field == 23){
@@ -199,7 +210,7 @@ void readAtributes(std::map<int, Atributes> mapAtributes){
 				}else if(c_field == 32){
 					mapAtributes[personID].interpersonalTrauma = token == "1"? true : false;
 				}else if(c_field == 35){
-					mapAtributes[personID].anxiety = token == "1"? true : mapAtributes[personID].anxiety;
+					mapAtributes[personID].anxietyPD = token == "1"? true : false;
 				}else if(c_field == 38){
 					mapAtributes[personID].emotional = token == "1"? true : false;
 				}else if(c_field == 41){
@@ -217,14 +228,18 @@ void readAtributes(std::map<int, Atributes> mapAtributes){
 				}else if(c_field == 59){
 					mapAtributes[personID].autoimmune = token == "1"? true : false;
 				}
+			}else{
+				std::cout << "null\n";
 			}
 			c_field++;
 		}
 	}
+
+	std :: cout << "AaaaaqqqqQQQQ: " << mapAtributes[66561].deathCause << "\n";
 	return;
 }
 
-void printFamilyFiles(const std::vector<Family> &dataset, const std::map<int, Atributes> &mapAtributes){
+void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atributes> &mapAtributes){
 	for(int i = 0; i < dataset.size(); i++){
 
 		// Create output file.
@@ -273,12 +288,178 @@ void printFamilyFiles(const std::vector<Family> &dataset, const std::map<int, At
 						outFile << "\"spouse_suicide\":\"yes\", ";
 					else
 						outFile << "\"spouse_suicide\":\"no\", ";
+
+					outFile << "\"spouse_sex\":\"M\", ";
+				
+					outFile << "\"spouse_deathCause\":\"";
+					if(!mapAtributes[spouse].deathCause.empty())
+						outFile << mapAtributes[spouse].deathCause;
+					else
+						outFile << "0";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_alcohol\":\"";
+					outFile << mapAtributes[spouse].alcohol ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_psychosis\":\"";
+					outFile << mapAtributes[spouse].psychosis ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_anxietyNonTrauma\":\"";
+					outFile << mapAtributes[spouse].anxietyNonTrauma ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_anxietyPD\":\"";
+					outFile << mapAtributes[spouse].anxietyPD ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_somaticDisorder\":\"";
+					outFile << mapAtributes[spouse].somaticDisorder ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_eating\":\"";
+					outFile << mapAtributes[spouse].eating ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_bipolar\":\"";
+					outFile << mapAtributes[spouse].bipolar ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_depression\":\"";
+					outFile << mapAtributes[spouse].depression ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_interpersonalTrauma\":\"";
+					outFile << mapAtributes[spouse].interpersonalTrauma ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_emotional\":\"";
+					outFile << mapAtributes[spouse].emotional ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_personalityDisorder\":\"";
+					outFile << mapAtributes[spouse].personalityDisorder ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_impulseControl\":\"";
+					outFile << mapAtributes[spouse].impulseControl ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_obesity\":\"";
+					outFile << mapAtributes[spouse].obesity ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_cardiovascular\":\"";
+					outFile << mapAtributes[spouse].cardiovascular ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_COPD\":\"";
+					outFile << mapAtributes[spouse].COPD ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_asthma\":\"";
+					outFile << mapAtributes[spouse].asthma ? "true" : "false";
+					outFile <<"\", ";
+
+					outFile << "\"spouse_autoimmune\":\"";
+					outFile << mapAtributes[spouse].autoimmune ? "true" : "false";
+					outFile <<"\", ";
+
 					printed.insert(spouse);
 				}
-				outFile << "\"sex\":\"F\"},\n";
-				printed.insert(dataset[i].vec[j].ID);
+
+				int myID = dataset[i].vec[j].ID;
+
+
+				outFile << "\"deathCause\":\"";
+				if(!mapAtributes[myID].deathCause.empty())
+					outFile << mapAtributes[myID].deathCause;
+				else
+					outFile << "-1";
+				outFile <<"\", ";
+
+				outFile << "\"alcohol\":\"";
+				outFile << mapAtributes[myID].alcohol ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"psychosis\":\"";
+				outFile << mapAtributes[myID].psychosis ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"anxietyNonTrauma\":\"";
+				outFile << mapAtributes[myID].anxietyNonTrauma ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"anxietyPD\":\"";
+				outFile << mapAtributes[myID].anxietyPD ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"somaticDisorder\":\"";
+				outFile << mapAtributes[myID].somaticDisorder ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"eating\":\"";
+				outFile << mapAtributes[myID].eating ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"bipolar\":\"";
+				outFile << mapAtributes[myID].bipolar ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"depression\":\"";
+				outFile << mapAtributes[myID].depression ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"interpersonalTrauma\":\"";
+				outFile << mapAtributes[myID].interpersonalTrauma ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"emotional\":\"";
+				outFile << mapAtributes[myID].emotional ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"personalityDisorder\":\"";
+				outFile << mapAtributes[myID].personalityDisorder ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"impulseControl\":\"";
+				outFile << mapAtributes[myID].impulseControl ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"obesity\":\"";
+				outFile << mapAtributes[myID].obesity ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"cardiovascular\":\"";
+				outFile << mapAtributes[myID].cardiovascular ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"COPD\":\"";
+				outFile << mapAtributes[myID].COPD ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"asthma\":\"";
+				outFile << mapAtributes[myID].asthma ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"autoimmune\":\"";
+				outFile << mapAtributes[myID].autoimmune ? "true" : "false";
+				outFile <<"\", ";
+
+				outFile << "\"sex\":\"F\", ";
+
+				// Printing suicide info.
+				outFile << "\"suicide\":\"";
+				if(suicided.find(myID) != suicided.end())
+					outFile << "yes";
+				else
+					outFile << "no";
+				outFile << "\"},\n";
+
+				printed.insert(myID);
 				printed.insert(spouse);
-				printedFixed.insert(dataset[i].vec[j].ID);
+				printedFixed.insert(myID);
 				printedAsSpouse.insert(spouse);
 			}			
 		}
@@ -311,20 +492,173 @@ void printFamilyFiles(const std::vector<Family> &dataset, const std::map<int, At
 							else
 								outFile << "no";
 							outFile << "\",";
+
+							outFile << "\"spouse_deathCause\":\"";
+							if(!mapAtributes[spouse].deathCause.empty())
+								outFile << mapAtributes[spouse].deathCause;
+							else
+								outFile << "0";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_alcohol\":\"";
+							outFile << mapAtributes[spouse].alcohol ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_psychosis\":\"";
+							outFile << mapAtributes[spouse].psychosis ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_anxietyNonTrauma\":\"";
+							outFile << mapAtributes[spouse].anxietyNonTrauma ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_anxietyPD\":\"";
+							outFile << mapAtributes[spouse].anxietyPD ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_somaticDisorder\":\"";
+							outFile << mapAtributes[spouse].somaticDisorder ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_eating\":\"";
+							outFile << mapAtributes[spouse].eating ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_bipolar\":\"";
+							outFile << mapAtributes[spouse].bipolar ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_depression\":\"";
+							outFile << mapAtributes[spouse].depression ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_interpersonalTrauma\":\"";
+							outFile << mapAtributes[spouse].interpersonalTrauma ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_emotional\":\"";
+							outFile << mapAtributes[spouse].emotional ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_personalityDisorder\":\"";
+							outFile << mapAtributes[spouse].personalityDisorder ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_impulseControl\":\"";
+							outFile << mapAtributes[spouse].impulseControl ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_obesity\":\"";
+							outFile << mapAtributes[spouse].obesity ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_cardiovascular\":\"";
+							outFile << mapAtributes[spouse].cardiovascular ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_COPD\":\"";
+							outFile << mapAtributes[spouse].COPD ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_asthma\":\"";
+							outFile << mapAtributes[spouse].asthma ? "true" : "false";
+							outFile <<"\", ";
+
+							outFile << "\"spouse_autoimmune\":\"";
+							outFile << mapAtributes[spouse].autoimmune ? "true" : "false";
+							outFile <<"\", ";
+
+
 							printed.insert(spouse);
 							printedAsSpouse.insert(spouse);
 						}
 
+						int myID = dataset[i].vec[j].ID;
+						outFile << "\"deathCause\":\"";
+						if(!mapAtributes[myID].deathCause.empty())
+							outFile << mapAtributes[myID].deathCause;
+						else
+							outFile << "0";
+						outFile <<"\", ";
+
+						outFile << "\"alcohol\":\"";
+						outFile << mapAtributes[myID].alcohol ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"psychosis\":\"";
+						outFile << mapAtributes[myID].psychosis ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"anxietyNonTrauma\":\"";
+						outFile << mapAtributes[myID].anxietyNonTrauma ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"anxietyPD\":\"";
+						outFile << mapAtributes[myID].anxietyPD ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"somaticDisorder\":\"";
+						outFile << mapAtributes[myID].somaticDisorder ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"eating\":\"";
+						outFile << mapAtributes[myID].eating ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"bipolar\":\"";
+						outFile << mapAtributes[myID].bipolar ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"depression\":\"";
+						outFile << mapAtributes[myID].depression ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"interpersonalTrauma\":\"";
+						outFile << mapAtributes[myID].interpersonalTrauma ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"emotional\":\"";
+						outFile << mapAtributes[myID].emotional ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"personalityDisorder\":\"";
+						outFile << mapAtributes[myID].personalityDisorder ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"impulseControl\":\"";
+						outFile << mapAtributes[myID].impulseControl ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"obesity\":\"";
+						outFile << mapAtributes[myID].obesity ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"cardiovascular\":\"";
+						outFile << mapAtributes[myID].cardiovascular ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"COPD\":\"";
+						outFile << mapAtributes[myID].COPD ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"asthma\":\"";
+						outFile << mapAtributes[myID].asthma ? "true" : "false";
+						outFile <<"\", ";
+
+						outFile << "\"autoimmune\":\"";
+						outFile << mapAtributes[myID].autoimmune ? "true" : "false";
+						outFile <<"\", ";
+
 						// Printing suicide info.
 						outFile << "\"suicide\":\"";
-						if(suicided.find(dataset[i].vec[j].ID) != suicided.end())
+						if(suicided.find(myID) != suicided.end())
 							outFile << "yes";
 						else
 							outFile << "no";
 						outFile << "\"},\n";
 
-						printed.insert(dataset[i].vec[j].ID);
-						printedFixed.insert(dataset[i].vec[j].ID);
+						printed.insert(myID);
+						printedFixed.insert(myID);
 					}
 				}
 			}
@@ -353,6 +687,8 @@ int main(){
 	std::map<int, Atributes> mapAtributes;
 
 	readAtributes(mapAtributes);
+	std :: cout << "AaaaaqqqqQQQQ: " << mapAtributes[66561].deathCause << "\n";
+
 
 	printFamilyFiles(dataset, mapAtributes);
 }
