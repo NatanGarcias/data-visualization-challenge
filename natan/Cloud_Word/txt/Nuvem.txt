@@ -1,0 +1,80 @@
+alcohol 
+depression depression 
+PD PD PD 
+cardiovascular 
+COPD COPD COPD 
+
+
+anxiety-non-trauma anxiety-non-trauma 
+bipolar spectrum_illness bipolar spectrum_illness 
+depression depression depression depression depression 
+interpersonal trauma 
+Impulse_control_disorder Impulse_control_disorder 
+obesity obesity obesity 
+
+
+alcohol alcohol alcohol alcohol 
+psychosis 
+anxiety-non-trauma anxiety-non-trauma anxiety-non-trauma anxiety-non-trauma 
+somatic_disorder 
+bipolar spectrum_illness bipolar spectrum_illness bipolar spectrum_illness 
+depression depression depression depression depression depression depression depression depression depression depression 
+interpersonal trauma interpersonal trauma 
+PD-Cluster_C-anxiety PD-Cluster_C-anxiety 
+PD-Cluster_B-emotional PD-Cluster_B-emotional PD-Cluster_B-emotional PD-Cluster_B-emotional 
+PD PD PD PD PD PD PD 
+obesity 
+cardiovascular cardiovascular 
+
+
+alcohol 
+PD PD 
+cardiovascular cardiovascular 
+COPD COPD 
+
+
+anxiety-non-trauma 
+eating 
+bipolar spectrum_illness bipolar spectrum_illness bipolar spectrum_illness bipolar spectrum_illness 
+depression depression depression depression depression depression depression depression depression depression 
+interpersonal trauma interpersonal trauma 
+PD-Cluster_B-emotional PD-Cluster_B-emotional PD-Cluster_B-emotional 
+PD PD PD PD PD PD 
+obesity 
+cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular 
+COPD COPD 
+
+
+alcohol alcohol alcohol alcohol 
+psychosis psychosis psychosis 
+anxiety-non-trauma anxiety-non-trauma anxiety-non-trauma 
+somatic_disorder somatic_disorder somatic_disorder 
+bipolar spectrum_illness bipolar spectrum_illness 
+depression depression depression depression depression depression depression depression depression depression depression depression depression depression 
+interpersonal trauma 
+PD-Cluster_B-emotional 
+PD PD PD PD 
+Impulse_control_disorder Impulse_control_disorder 
+obesity obesity obesity obesity 
+cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular 
+COPD COPD COPD 
+asthma asthma asthma asthma 
+
+
+alcohol 
+anxiety-non-trauma anxiety-non-trauma 
+depression depression depression depression depression depression depression 
+PD 
+obesity 
+cardiovascular cardiovascular cardiovascular cardiovascular cardiovascular 
+COPD 
+
+
+alcohol 
+somatic_disorder 
+depression depression depression depression 
+
+
+depression depression 
+
+

@@ -1,0 +1,13 @@
+alcohol alcohol alcohol alcohol 
+psychosis 
+anxiety-non-trauma anxiety-non-trauma anxiety-non-trauma anxiety-non-trauma 
+somatic_disorder 
+bipolar spectrum_illness bipolar spectrum_illness bipolar spectrum_illness 
+depression depression depression depression depression depression depression depression depression depression depression 
+interpersonal trauma interpersonal trauma 
+PD-Cluster_C-anxiety PD-Cluster_C-anxiety 
+PD-Cluster_B-emotional PD-Cluster_B-emotional PD-Cluster_B-emotional PD-Cluster_B-emotional 
+PD PD PD PD PD PD PD 
+obesity 
+cardiovascular cardiovascular 
+
