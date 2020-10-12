@@ -234,8 +234,6 @@ void readAtributes(std::map<int, Atributes> &mapAtributes){
 			c_field++;
 		}
 	}
-
-	std :: cout << "AaaaaqqqqQQQQ: " << mapAtributes[66561].deathCause << "\n";
 	return;
 }
 
@@ -244,7 +242,7 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 
 		// Create output file.
 		std::string outDir = OutputDirectory;
-		std::string outStr = outDir + "Family_" + std::to_string(i+1) + ".txt";
+		std::string outStr = outDir + "family_" + std::to_string(i+1) + ".json";
 		std::ofstream outFile(outStr);
 
 		// Map marriage edges, manage people outside family/first generation and map suicides.
@@ -275,11 +273,13 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 				suicided.insert(dataset[i].vec[j].ID);
 		}
 
+		outFile << "[";
+
 		// Print outsiders/family from first generation. Men will be root in this generation.
 		for(int j = 0; j < dataset[i].vec.size(); j++){
 			if(dataset[i].vec[j].gen == 1 && dataset[i].vec[j].sex == 'F'){
 				outFile << "{\"child\":\"" << dataset[i].vec[j].ID << "\", \"parent\":\"\", \"spouse\":";
-				
+
 				// Print spouse and if spouse suicided.
 				int spouse = marriage[dataset[i].vec[j].ID];
 				if(spouse != -1){
@@ -290,7 +290,7 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 						outFile << "\"spouse_suicide\":\"no\", ";
 
 					outFile << "\"spouse_sex\":\"M\", ";
-				
+
 					outFile << "\"spouse_deathCause\":\"";
 					if(!mapAtributes[spouse].deathCause.empty())
 						outFile << mapAtributes[spouse].deathCause;
@@ -366,11 +366,24 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 					outFile << mapAtributes[spouse].autoimmune ? "true" : "false";
 					outFile <<"\", ";
 
+					int c_print_year = 0;
+					for(int k = 0; k < dataset[i].vec.size(); k++){
+						if(dataset[i].vec[k].ID == spouse){	
+							c_print_year++;
+							outFile << "\"spouse_birthYear\":\"" << dataset[i].vec[k].birthYear << "\",";
+							outFile << "\"spouse_deathYear\":\"" << dataset[i].vec[k].deathYear << "\",";
+						}
+					}
+					assert(c_print_year == 1);
+
 					printed.insert(spouse);
 				}
 
 				int myID = dataset[i].vec[j].ID;
 
+				outFile << "\"birthYear\":\"" << dataset[i].vec[j].birthYear << "\",";
+				outFile << "\"deathYear\":\"" << dataset[i].vec[j].deathYear << "\",";
+				outFile << "\"sex\":\"F\", ";
 
 				outFile << "\"deathCause\":\"";
 				if(!mapAtributes[myID].deathCause.empty())
@@ -447,7 +460,6 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 				outFile << mapAtributes[myID].autoimmune ? "true" : "false";
 				outFile <<"\", ";
 
-				outFile << "\"sex\":\"F\", ";
 
 				// Printing suicide info.
 				outFile << "\"suicide\":\"";
@@ -568,12 +580,29 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 							outFile << mapAtributes[spouse].autoimmune ? "true" : "false";
 							outFile <<"\", ";
 
-
+							int c_print_year = 0;
+							for(int z = 0; z < dataset[i].vec.size(); z++){
+								if(dataset[i].vec[z].ID == spouse){	
+									c_print_year++;
+									outFile << "\"spouse_birthYear\":\"" << dataset[i].vec[z].birthYear << "\", ";
+									outFile << "\"spouse_deathYear\":\"" << dataset[i].vec[z].deathYear << "\", ";
+									outFile << "\"spouse_sex\":\"" << dataset[i].vec[z].sex << "\", ";
+									break;
+								}
+							}
+							assert(c_print_year == 1);
+							
 							printed.insert(spouse);
 							printedAsSpouse.insert(spouse);
 						}
 
 						int myID = dataset[i].vec[j].ID;
+
+
+						outFile << "\"birthYear\":\"" << dataset[i].vec[j].birthYear << "\", ";
+						outFile << "\"deathYear\":\"" << dataset[i].vec[j].deathYear << "\", ";
+						outFile << "\"sex\":\"" << dataset[i].vec[j].sex << "\", ";
+
 						outFile << "\"deathCause\":\"";
 						if(!mapAtributes[myID].deathCause.empty())
 							outFile << mapAtributes[myID].deathCause;
@@ -663,6 +692,7 @@ void printFamilyFiles(const std::vector<Family> &dataset, std::map<int, Atribute
 				}
 			}
 		}
+		outFile << "]";
 
 		std::cout << "POSITIONS: " << dataset[i].vec.size() << " PRINTED: " << printed.size() << "\n";
 		for(int j = 0; j < dataset[i].vec.size(); j++){
@@ -687,8 +717,6 @@ int main(){
 	std::map<int, Atributes> mapAtributes;
 
 	readAtributes(mapAtributes);
-	std :: cout << "AaaaaqqqqQQQQ: " << mapAtributes[66561].deathCause << "\n";
-
 
 	printFamilyFiles(dataset, mapAtributes);
 }
