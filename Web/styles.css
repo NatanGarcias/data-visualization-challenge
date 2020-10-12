@@ -13,6 +13,14 @@
 body{
    background-color: #DDDDDD;
 }
+li {
+    margin-left: 10px;
+    list-style-type: square;
+}
+.img-container {
+  text-align: center;
+  display: block;
+}
 
 .wrapper{
   display: flex;
