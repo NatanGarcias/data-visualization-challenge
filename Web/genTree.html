@@ -139,7 +139,7 @@
 		        svg.selectAll('*').remove();
 		    } else {
 		        svg = d3.select("body").append("svg")
-		            .attr("width", 6000).attr("height", 2000) // Page sizes.
+		            .attr("width", 7350).attr("height", 1000) // Page sizes.
 		            .append("g").attr("transform", "translate(250, 50)");
 		    }
 
@@ -151,23 +151,23 @@
 		    if (selectedFamily == 0) 
 		        data = [];
 		    else if (selectedFamily == 1)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_6.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_1.json";
 		    else if (selectedFamily == 2)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_6.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_2.json";
 		    else if (selectedFamily == 3)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_3.json";
 		    else if (selectedFamily == 4)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_4.json";
 		    else if (selectedFamily == 5)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_5.json";
 		    else if (selectedFamily == 6)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/f6.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_6.json";
 		    else if (selectedFamily == 7)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_7.json";
 		    else if (selectedFamily == 8)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_8.json";
 		    else if (selectedFamily == 9)
-		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/Family_1.json";
+		        datasetDirectory = "https://raw.githubusercontent.com/geflx/csv_test/master/family_9.json";
 		    
 
 		    d3.json(datasetDirectory).then(function(data) {
@@ -184,24 +184,23 @@
 		        // Resizing tree accordingly to data volume.
 		        var treeStructure;
 		        if (selectedFamily == 1) {
-		            treeStructure = d3.tree().size([4000, 650]);
+		            treeStructure = d3.tree().size([2000, 480]);
 		        } else if (selectedFamily == 2) {
-		            treeStructure = d3.tree().size([4000, 700]);
+		            treeStructure = d3.tree().size([2000, 520]);
 		        } else if (selectedFamily == 3) {
-		            treeStructure = d3.tree().size([7000, 1100]);
-
+		            treeStructure = d3.tree().size([7000, 750]);
 		        } else if (selectedFamily == 4) {
-
+		            treeStructure = d3.tree().size([1500, 510]);
 		        } else if (selectedFamily == 5) {
-
+		            treeStructure = d3.tree().size([4200, 620]);
 		        } else if (selectedFamily == 6) {
-
+		            treeStructure = d3.tree().size([7100, 750]);
 		        } else if (selectedFamily == 7) {
-
+		            treeStructure = d3.tree().size([3000, 550]);
 		        } else if (selectedFamily == 8) {
-
+		            treeStructure = d3.tree().size([2000, 480]);
 		        } else if (selectedFamily == 9) {
-
+		            treeStructure = d3.tree().size([1100, 480]);
 		        }
 
 		        // D3 Tree...
