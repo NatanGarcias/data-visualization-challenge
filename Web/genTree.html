@@ -26,7 +26,7 @@
         <b><p style="font-size: 20px">Select family:</p></b> 
         <form id="familyDetails">
             <select id="familyComboBox">
-                <option value=""></option>
+                <option value="0"></option>
                 <option value="1">One (Small) - ID 38</option>
                 <option value="2">Two (Small) - ID 149</option>
                 <option value="3">Three (Very Large) - ID 27251</option>
@@ -72,9 +72,16 @@
 
 	    // Family additional details.
 	    var familyCodes = {
-	        1: "Duplicated spouses: 44862 e 49224. </br> No parent information: 60064 e 37544. </br> Duplicated information in dataset: 40788 (didn't suicide)",
-	        2: "aparece esse texto",
-	        3: 13
+	    	0: "</br></br> Family additional details will be shown here.",
+	        1: "</br></br> Duplicated spouses: 44862 and 49224. </br></br> No parent information: 60064 and 37544. </br></br> Duplicated information in dataset: 40788 (didn't suicide)",
+	        2: "</br></br> Duplicated spouses: 48671, 42088, 54822 and 30890. </br></br> No parent information:  5173. </br>",
+	        3: "</br></br> Duplicated spouses: 32123, 13548, 23028, 1518, 22245 and 39828. </br></br> No parent information:  18802, 55985 and 41825. </br>",
+	        4: "</br></br> Duplicated spouses:  20110 and 67194. </br></br> No parent information:  39747. </br>",
+	        5: "</br></br> Duplicated spouses: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br></br> Duplicated information in dataset: 40788. </br>",
+	        6: "</br></br> Duplicated spouses: 4029, 4032, 55880, 66840, 20403, 21086, 24919,  45901, 37559, 38393, 62035, 30675, 56686, 22640, 47730,  67347 and 27983. </br></br> No parent information:  66789, 39413, 18275 and 35985. </br>",
+	        7: "</br></br> Duplicated spouses:  41211 and 40117. </br></br> No parent information:  4005. </br>",
+	        8: "</br></br> Duplicated spouses:  2782,  45317, 32833, 67529 and 9146. </br></br> No parent information:  65715. </br>", 
+	        9: "</br></br> Duplicated spouses:  17581 and 6436. </br></br> No parent information:  60996. </br>"
 	    };
 
 		// Refresh page when changing checbox or combo box.
