@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Family Tree</title>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+
+	<style>
+
+        .axis {
+          font: 13px sans-serif;
+        }
+    
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+    
+        </style>
+</head>
+<body>
+    <div class="wrapper">
+    <div class="sidebar">
+        <h2>BioVis 2020 Challenge</h2>
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="#"><i class="fas fa-book"></i>Problem Description</a>
+            <li><a href="#"><i class="fas fa-cubes"></i>Dataset</a></li></li>
+            <li><a href="genTree.html"><i class="fas fa-book"></i>Genealogic Trees</a>
+            <li><a href="#"><i class="fas fa-object-group"></i>Graphics</a></li>
+        </ul> 
+        <div class="social_media">
+          <a href="#"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+    <div class="main_content">
+         <div class="header">
+        <b><p style="font-size: 20px">Select family:</p></b> 
+        <form id="familyDetails">
+            <select id="familyComboBox">
+                <option value="0"></option>
+                <option value="1">One (Small) - ID 38</option>
+                <option value="2">Two (Small) - ID 149</option>
+                <option value="3">Three (Very Large) - ID 27251</option>
+                <option value="4">Four (Very Small) - ID 42623</option>
+                <option value="5">Five (Large) - ID 68939</option>
+                <option value="6">Six (Very Large) - ID 176860</option>
+                <option value="7">Seven (Medium) - ID 603481</option>
+                <option value="8">Eight (Small) - ID 791533</option>
+                <option value="9">Nine (Very Small) - ID 903988</option>
+            </select>
+        </form>        
+    </div>  
+        </br>
+        <table style="margin-left:30px">
+          <tr>
+            <th>Filters</th>
+            <th>Family Information</th>
+          </tr>
+          <tr>
+            <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease</td>
+            <td rowspan="4"><p id="familyDetailsText"> Family additional details will be shown here. </p>
+            </br><b>Note</b>: The above elements of the three weren't printed due to tree's structure (such as duplicated spouses) or lack of parent information in dataset.
+            </td>
+           </tr>
+           <tr><td><input type="checkbox" id="cbDepression" checked="checked" class="cbox"> Depression</td></tr>
+           <tr><td><input type="checkbox" id="cbEating" checked="checked" class="cbox"> Eating</td></tr>
+           <tr><td><input type="checkbox" id="cbAlcohol" checked="checked" class="cbox"> Alcohol</td></tr>
+           <tr><td><input type="checkbox" id="cbSomaticDisorder" checked="checked" class="cbox"> Somatic disorder</td></tr> 
+           <tr><td><input type="checkbox" id="cbObesity" checked="checked" class="cbox"> Obesity</td></tr>
+           <tr><td><input type="checkbox" id="cbPsychosis" checked="checked" class="cbox"> Psychosis</td></tr>
+           <tr><td><input type="checkbox" id="cbBipolar" checked="checked" class="cbox"> Bipolar spec. illness</td></tr>
+           <tr><td><input type="checkbox" id="cbTrauma" checked="checked" class="cbox"> Interpersonal trauma</td></tr>
+		   <tr><td><input type="checkbox" id="cbPD" checked="checked" class="cbox"> Personality Disorder</td></tr>
+	       <tr><td><input type="checkbox" id="cbAnxietyNonTrauma" checked="checked" class="cbox"> Anxiety Non-Trauma<td></tr>
+	       <tr><td><input type="checkbox" id="cbAnxietyPD" checked="checked" class="cbox"> Anxiety Personality Disorder<td></tr>
+	       <tr><td><input type="checkbox" id="cbEmotional" checked="checked" class="cbox"> Emotional<td></tr>
+	       <tr><td><input type="checkbox" id="cbAsthma" checked="checked" class="cbox"> Asthma<td></tr>
+	       <tr><td><input type="checkbox" id="cbCOPD" checked="checked" class="cbox"> Chronic Obstructive Pulmonary Disease<td></tr>
+	       <tr><td><input type="checkbox" id="cbImpulse" checked="checked" class="cbox"> Impulse Constrol Disorder<td></tr>
+	       <tr><td><input type="checkbox" id="cbCardiovascular" checked="checked" class="cbox"> Cardiovascular Disease<td></tr>
+        </table>
+    <script>
+
+	    // Family additional details.
+	    var familyCodes = {
+	    	0: "</br></br> Family additional details will be shown here.",
+	        1: "</br></br> Duplicated spouses: 44862 and 49224. </br></br> No parent information: 60064 and 37544. </br></br> Duplicated information in dataset: 40788 (didn't suicide)",
+	        2: "</br></br> Duplicated spouses: 48671, 42088, 54822 and 30890. </br></br> No parent information:  5173. </br>",
+	        3: "</br></br> Duplicated spouses: 32123, 13548, 23028, 1518, 22245 and 39828. </br></br> No parent information:  18802, 55985 and 41825. </br>",
+	        4: "</br></br> Duplicated spouses:  20110 and 67194. </br></br> No parent information:  39747. </br>",
+	        5: "</br></br> Duplicated spouses: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br></br> Duplicated information in dataset: 40788. </br>",
+	        6: "</br></br> Duplicated spouses: 4029, 4032, 55880, 66840, 20403, 21086, 24919,  45901, 37559, 38393, 62035, 30675, 56686, 22640, 47730,  67347 and 27983. </br></br> No parent information:  66789, 39413, 18275 and 35985. </br>",
+	        7: "</br></br> Duplicated spouses:  41211 and 40117. </br></br> No parent information:  4005. </br>",
+	        8: "</br></br> Duplicated spouses:  2782,  45317, 32833, 67529 and 9146. </br></br> No parent information:  65715. </br>", 
+	        9: "</br></br> Duplicated spouses:  17581 and 6436. </br></br> No parent information:  60996. </br>"
+	    };
+
+		// Refresh page when changing checbox or combo box.
+		d3.select("#familyComboBox").on("change", update);
+		d3.selectAll('.cbox').on("change", update);
+
+		var print = 0;
+
+		// Insert code to import and parse CSV file here.
+		var data = [];
+		var svg;
+
+		var selectedFamily = "";
+
+		function update() {
+
+		    var tmp = document.getElementById("familyComboBox");
+		    var selectedFamily = tmp.options[tmp.selectedIndex].value;
+
+		    document.getElementById("familyDetailsText").innerHTML = familyCodes[selectedFamily];
+
+		    if (print > 0) {
+		        svg.selectAll('*').remove();
+		    } else {
+		        svg = d3.select("body").append("svg")
+		            .attr("width", 7350).attr("height", 1000) // Page sizes.
+		            .append("g").attr("transform", "translate(250, 50)");
+		    }
+
+		    if (selectedFamily != 0) 
+		    	print++;
+
+		    var datasetDirectory = "";
+            
+            var diretorio = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families/";
+		    if (selectedFamily == 0) 
+		        data = [];
+		    else if (selectedFamily == 1)
+		        datasetDirectory = "Familia_1.csv";
+		    else if (selectedFamily == 2)
+		        datasetDirectory = "Familia_2.csv";
+		    else if (selectedFamily == 3)
+		        datasetDirectory = "Familia_3.csv";
+		    else if (selectedFamily == 4)
+		        datasetDirectory = "Familia_4.csv";
+		    else if (selectedFamily == 5)
+		        datasetDirectory = "Familia_5.csv";
+		    else if (selectedFamily == 6)
+		        datasetDirectory = "Familia_6.csv";
+		    else if (selectedFamily == 7)
+		        datasetDirectory = "Familia_7.csv";
+		    else if (selectedFamily == 8)
+		        datasetDirectory = "Familia_8.csv";
+		    else if (selectedFamily == 9)
+		        datasetDirectory = "Familia_9.csv";
+            
+            //New ----------------------------------------------------
+
+            var margin = {top: 60, right: 40, bottom: 150, left: 80},
+                width = 700 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            var x = d3.scale.ordinal().rangeRoundBands([0, width], .30);
+
+            var y = d3.scale.linear().range([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .ticks(10);
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .ticks(8, "%");
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform", 
+                    "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.csv("data/families/Familia_1.csv", function(error, data) {
+
+                data.forEach(function(d) {
+                    d.atr_clinico = d.atr_clinico;
+                    d.porcentagem = +d.porcentagem;
+                });
+                
+            x.domain(data.map(function(d) { return d.atr_clinico; }));
+            y.domain([0, d3.max(data, function(d) { return d.porcentagem; })]);
+            
+            //Adicionando o titulo do gráfico
+            svg.append("text")
+                .attr("transform", "translate(100,0)")
+                .attr("x", -100)
+                .attr("y", -15)
+                .attr("font-size", "24px")
+                .text("Family 1 - clinical atributes incidence in suicide cases")
+
+            //Escala X
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.6em") //Distancia da palavra para o eixo
+                .attr("transform", "rotate(-45)" ); //Angulo da palavra
+            
+            /* Colocar descrição eixo X
+            .append("text")
+                .attr("y", height - 250)
+                .attr("x", width - 100)
+                .attr("text-anchor", "end")
+                .attr("stroke", "black")
+                .text("Year")
+                
+            */ 
+
+            //Escala Y
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", "-4.1em")
+                .style("text-anchor", "end")
+                .text("Incidence (%)");
+
+            // Adicionand Barras
+            svg.selectAll("bar")
+                .data(data)
+                .enter().append("rect")
+                .style("fill", "#FFAE49")
+                .attr("x", function(d) { return x(d.atr_clinico); })
+                .attr("width", x.rangeBand())
+                .attr("y", function(d) { return y(d.porcentagem); })
+                .attr("height", function(d) { return height - y(d.porcentagem); });
+
+            });
+
+		    // d3.json(datasetDirectory).then(function(data) {
+
+		    //     // D3 Tree...
+		    //     var dataStructure = d3.stratify()
+		    //         .id(function(d) {
+		    //             return d.child;
+		    //         })
+		    //         .parentId(function(d) {
+		    //             return d.parent;
+		    //         })(data);
+
+		    //     // Resizing tree accordingly to data volume.
+		    //     var treeStructure;
+		    //     if (selectedFamily == 1) {
+		    //         treeStructure = d3.tree().size([2000, 480]);
+		    //     } else if (selectedFamily == 2) {
+		    //         treeStructure = d3.tree().size([2000, 520]);
+		    //     } else if (selectedFamily == 3) {
+		    //         treeStructure = d3.tree().size([7000, 750]);
+		    //     } else if (selectedFamily == 4) {
+		    //         treeStructure = d3.tree().size([1500, 510]);
+		    //     } else if (selectedFamily == 5) {
+		    //         treeStructure = d3.tree().size([4200, 620]);
+		    //     } else if (selectedFamily == 6) {
+		    //         treeStructure = d3.tree().size([7100, 750]);
+		    //     } else if (selectedFamily == 7) {
+		    //         treeStructure = d3.tree().size([3000, 550]);
+		    //     } else if (selectedFamily == 8) {
+		    //         treeStructure = d3.tree().size([2000, 480]);
+		    //     } else if (selectedFamily == 9) {
+		    //         treeStructure = d3.tree().size([1100, 480]);
+		    //     }
+
+		    //     // D3 Tree...
+		    //     var information = treeStructure(dataStructure);
+		    //     console.log(information.descendants());
+
+		    //     // Connection lines.
+		    //     var connections = svg.append("g").selectAll("path")
+		    //         .data(information.links());
+		    //     connections.enter().append("path")
+		    //         .attr("d", function(d) {
+		    //             return "M" + (d.source.x) + "," + d.source.y + " C " +
+		    //                 d.source.x + "," + (d.source.y + d.target.y) / 2 + " " +
+		    //                 d.target.x + "," + (d.source.y + d.target.y) / 2 + " " +
+		    //                 d.target.x + "," + d.target.y;
+		    //         })
+		    //         .attr("opacity", function() {
+		    //             return 0.3;
+
+		    //         });
+
+		    //     // Show dialogue text on mouse overlay.
+		    //     var tooltip = d3.select("body")
+		    //         .append("div")
+		    //         .attr("class", "tooltip-inner")
+		    //         .style("background-color", "white")
+		    //         .style("border", "solid")
+		    //         .style("border-width", "2px")
+		    //         .style("border-radius", "5px")
+		    //         .style("position", "absolute")
+		    //         .style("padding", "5px")
+		    //         .style("z-index", "10")
+		    //         .style("visibility", "hidden");
+
+		    //     // Family member's node.
+		    //     var nodes = svg.append("g").selectAll("circle").data(information.descendants());
+
+		    //     nodes.enter().append("circle")
+		    //         .attr("cx", function(d) {
+		    //             return d.x;
+		    //         })
+		    //         .attr("cy", function(d) {
+		    //             return d.y;
+		    //         })
+		    //         .attr("opacity", function(d) {
+		    //             // Highlight node if it has at least one of the filters checked
+		    //             if ((d.data.alcohol == "1" && filterAtributes["alcohol"] == true) ||
+		    //                 (d.data.somaticDisorder == "1" && filterAtributes["somaticDisorder"] == true) ||
+		    //                 (d.data.psychosis == "1" && filterAtributes["psychosis"] == true) ||
+		    //                 (d.data.eating == "1" && filterAtributes["eating"] == true) ||
+		    //                 (d.data.bipolar == "1" && filterAtributes["bipolar"] == true) ||
+		    //                 (d.data.depression == "1" && filterAtributes["depression"] == true) ||
+		    //                 (d.data.interpersonalTrauma == "1" && filterAtributes["interpersonalTrauma"] == true) ||
+		    //                 (d.data.emotional == "1" && filterAtributes["emotional"] == true) ||
+		    //                 (d.data.personalityDisorder == "1" && filterAtributes["personalityDisorder"] == true) ||
+		    //                 (d.data.impulseControl == "1" && filterAtributes["impulseControl"] == true) ||
+		    //                 (d.data.obesity == "1" && filterAtributes["obesity"] == true) ||
+		    //                 (d.data.cardiovascular == "1" && filterAtributes["cardiovascular"] == true) ||
+		    //                 (d.data.COPD == "1" && filterAtributes["COPD"] == true) ||
+		    //                 (d.data.asthma == "1" && filterAtributes["asthma"] == true) ||
+		    //                 (d.data.autoimmune == "1" && filterAtributes["autoimmune"] == true) ||
+		    //                 (d.data.anxietyPD == "1" && filterAtributes["anxietyPD"] == true) ||
+		    //                 (d.data.anxietyNonTrauma == "1" && filterAtributes["anxietyNonTrauma"] == true)) {
+		                    
+		    //                 console.log("Matching filters, highlight node!");
+		    //                 return 1.0;
+		    //             }
+		    //             return 0.6;
+
+		    //         })
+		    //         .attr("r", function(d) {
+		    //             if (d3.select(this).attr("opacity") == 1.0) {
+		    //                 return 12.5;
+		    //             } else {
+		    //                 return 10;
+		    //             }
+		    //         })
+		    //         .attr("fill", function(d) {
+		    //             if (d.data.suicide != undefined &&
+		    //                 d.data.suicide == "yes")
+		    //                 return "#e03f54" // Red
+		    //             else
+		    //                 return "gray";
+		    //         })
+
+		    //         // Display information on mouse overlay.
+		    //         .on("mouseover", function(d) {
+
+		    //             var outputText = "ID: " + d.data.child + "\n";
+
+		    //             outputText += ( d.data.sex == "F" ? "Female" : "Male" ) + "\n";
+		    //             outputText += "★: " + d.data.birthYear + "\n";
+		                
+		    //             if(d.data.deathYear != "-1")
+		    //             	outputText += "✝" + d.data.deathYear + "\n";
+
+		    //             var outputTextAttributes = "";
+
+		    //             if (d.data.alcohol == "1") 
+		    //                 outputTextAttributes += "Alcohol\n";
+		                
+		    //             if (d.data.somaticDisorder == "1") 
+		    //                 outputTextAttributes += "Somatic_Disorder\n";
+		                
+		    //             if (d.data.psychosis == "1") 
+		    //                 outputTextAttributes += "Psychosis\n";
+		                
+		    //             if (d.data.eating == "1") 
+		    //                 outputTextAttributes += "Eating\n";
+		                
+		    //             if (d.data.bipolar == "1") 
+		    //                 outputTextAttributes += "Bipolar\n";
+		                
+		    //             if (d.data.depression == "1") 
+		    //                 outputTextAttributes += "Depression\n";
+		                
+		    //             if (d.data.interpersonalTrauma == "1") 
+		    //                 outputTextAttributes += "Interpersonal_Trauma\n";
+		                
+		    //             if (d.data.emotional == "1") 
+		    //                 outputTextAttributes += "Emotional\n";
+		                
+		    //             if (d.data.personalityDisorder == "1") 
+		    //                 outputTextAttributes += "Personality_Disorder\n";
+		                
+		    //             if (d.data.impulseControl == "1") 
+		    //                 outputTextAttributes += "Impulse Control Disorder\n";
+		                
+		    //             if (d.data.obesity == "1") 
+		    //                 outputTextAttributes += "Obesity\n";
+		                
+		    //             if (d.data.cardiovascular == "1") 
+		    //                 outputTextAttributes += "Cardiovascular\n";
+		                
+		    //             if (d.data.COPD == "1") 
+		    //                 outputTextAttributes += "COPD\n";
+		                
+		    //             if (d.data.asthma == "1") 
+		    //                 outputTextAttributes += "Asthma\n";
+		                
+		    //             if (d.data.autoimmune == "1") 
+		    //                 outputTextAttributes += "Autoimmune_Disease\n";
+		                
+		    //             if (d.data.anxietyPD == "1") 
+		    //                 outputTextAttributes += "Anxiety_Personality_Disorder\n";
+		                
+		    //             if (d.data.anxietyNonTrauma == "1") 
+		    //                 outputTextAttributes += "Anxiety_Non_Trauma\n";
+		                
+		    //             if(outputTextAttributes != "")
+		    //             	outputText += "\n" + outputTextAttributes;
+
+		    //             tooltip.style("visibility", "visible")
+		    //                 .text(outputText)
+		    //         })
+		    //         .on("mousemove", function() {
+		    //             return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+		    //         })
+		    //         .on("mouseout", function() {
+		    //             return tooltip.style("visibility", "hidden");
+
+		    //         });;
+
+		    //     // Spouse nodes.
+		    //     var spouseNodes = svg.append("g").selectAll("circle").data(information.descendants());
+		    //     spouseNodes.enter().append("circle")
+		    //         .attr("cx", function(d) {
+		    //             return d.x + 30;
+		    //         })
+		    //         .attr("cy", function(d) {
+		    //             return d.y;
+		    //         })
+		    //         .classed("hide", function(d) {
+		    //             if (d.data.spouse == undefined)
+		    //                 return true;
+		    //             else
+		    //                 return false;
+		    //         })
+		    //         .attr("opacity", function(d) {
+		    //             // Highlight node if it has at least one of the filters checked
+		    //             if ((d.data.spouse_alcohol == "1" && filterAtributes["alcohol"] == true) ||
+		    //                 (d.data.spouse_somaticDisorder == "1" && filterAtributes["somaticDisorder"] == true) ||
+		    //                 (d.data.spouse_psychosis == "1" && filterAtributes["psychosis"] == true) ||
+		    //                 (d.data.spouse_eating == "1" && filterAtributes["eating"] == true) ||
+		    //                 (d.data.spouse_bipolar == "1" && filterAtributes["bipolar"] == true) ||
+		    //                 (d.data.spouse_depression == "1" && filterAtributes["depression"] == true) ||
+		    //                 (d.data.spouse_interpersonalTrauma == "1" && filterAtributes["interpersonalTrauma"] == true) ||
+		    //                 (d.data.spouse_emotional == "1" && filterAtributes["emotional"] == true) ||
+		    //                 (d.data.spouse_personalityDisorder == "1" && filterAtributes["personalityDisorder"] == true) ||
+		    //                 (d.data.spouse_impulseControl == "1" && filterAtributes["impulseControl"] == true) ||
+		    //                 (d.data.spouse_obesity == "1" && filterAtributes["obesity"] == true) ||
+		    //                 (d.data.spouse_cardiovascular == "1" && filterAtributes["cardiovascular"] == true) ||
+		    //                 (d.data.spouse_COPD == "1" && filterAtributes["COPD"] == true) ||
+		    //                 (d.data.spouse_asthma == "1" && filterAtributes["asthma"] == true) ||
+		    //                 (d.data.spouse_autoimmune == "1" && filterAtributes["autoimmune"] == true) ||
+		    //                 (d.data.spouse_anxietyPD == "1" && filterAtributes["anxietyPD"] == true) ||
+		    //                 (d.data.spouse_anxietyNonTrauma == "1" && filterAtributes["anxietyNonTrauma"] == true)) {
+		    //                 return 1.0;
+		    //             }
+		    //             return 0.6;
+
+		    //         })
+		    //         .attr("r", function(d) {
+		    //             if (d3.select(this).attr("opacity") == 1.0) {
+		    //                 return 12.5;
+		    //             } else {
+		    //                 return 10;
+		    //             }
+		    //         })
+		    //         .attr("fill", function(d) {
+		    //             if (d.data.spouse != undefined &&
+		    //                 d.data.spouse_suicide == "yes")
+		    //                 return "#e03f54" // Red
+		    //             else
+		    //                 return "#474747"; // Dark gray
+		    //         })
+		    //         .on("mouseover", function(d) {
+
+		    //             var outputText = "ID: " + d.data.spouse + "\n";
+
+		    //             outputText += (d.data.spouse_sex == "F" ? "Female" : "Male" ) + "\n";
+		    //             outputText += "★: " + d.data.spouse_birthYear + "\n";
+		                
+		    //             if(d.data.spouse_deathYear != "-1")
+		    //             	outputText += "✝: " + d.data.spouse_deathYear + "\n";
+
+		    //             var outputTextAttributes = "";
+
+		    //             if (d.data.spouse_alcohol == "1") 
+		    //                 outputTextAttributes += "Alcohol\n";
+		                
+		    //             if (d.data.spouse_somaticDisorder== "1") 
+		    //                 outputTextAttributes += "Somatic_Disorder\n";
+		                
+		    //             if (d.data.spouse_psychosis == "1") 
+		    //                 outputTextAttributes += "Psychosis\n";
+		                
+		    //             if (d.data.spouse_eating == "1") 
+		    //                 outputTextAttributes += "Eating\n";
+		                
+		    //             if (d.data.spouse_bipolar == "1") 
+		    //                 outputTextAttributes += "Bipolar\n";
+		                
+		    //             if (d.data.spouse_depression == "1") 
+		    //                 outputTextAttributes += "Depression\n";
+		                
+		    //             if (d.data.spouse_interpersonalTrauma == "1") 
+		    //                 outputTextAttributes += "Interpersonal_Trauma\n";
+		                
+		    //             if (d.data.spouse_emotional == "1") 
+		    //                 outputTextAttributes += "Emotional\n";
+		                
+		    //             if (d.data.spouse_personalityDisorder == "1") 
+		    //                 outputTextAttributes += "Personality_Disorder\n";
+		                
+		    //             if (d.data.spouse_impulseControl == "1") 
+		    //                 outputTextAttributes += "Impulse Control Disorder\n";
+		                
+		    //             if (d.data.spouse_obesity == "1")
+		    //                 outputTextAttributes += "Obesity\n";
+		                
+		    //             if (d.data.spouse_cardiovascular == "1") 
+		    //                 outputTextAttributes += "Cardiovascular\n";
+		                
+		    //             if (d.data.spouse_COPD == "1") 
+		    //                 outputTextAttributes += "COPD\n";
+		                
+		    //             if (d.data.spouse_asthma == "1") 
+		    //                 outputTextAttributes += "Asthma\n";
+		                
+		    //             if (d.data.spouse_autoimmune == "1") 
+		    //                 outputTextAttributes += "Autoimmune_Disease\n";
+		                
+		    //             if (d.data.spouse_anxietyPD == "1") 
+		    //                 outputTextAttributes += "Anxiety_Personality_Disorder\n";
+		                
+		    //             if (d.data.spouse_anxietyNonTrauma == "1") 
+		    //                 outputTextAttributes += "Anxiety_Non_Trauma\n";
+		                
+		    //             if(outputTextAttributes != "")
+		    //             	outputText += "\n" + outputTextAttributes;
+		                
+		    //             tooltip.style("visibility", "visible")
+		    //                 .text(outputText)
+		    //         })
+		    //         .on("mousemove", function() {
+		    //             return tooltip.style("top", (d3.event.pageY - 40) + "px").style("left", (d3.event.pageX - 130) + "px");
+		    //         })
+		    //         .on("mouseout", function() {
+		    //             return tooltip.style("visibility", "hidden");
+
+		    //         });
+
+		    //     // Family members names.
+		    //     var names = svg.append("g").selectAll("text").data(information.descendants());
+		    //     names.enter().append("text")
+		    //         .text(function(d) {
+		    //             return d.data.child;
+		    //         })
+		    //         .attr("x", function(d) {
+		    //             return d.x - 0;
+		    //         })
+		    //         .attr("y", function(d) {
+		    //             return d.y - 15;
+		    //         })
+		    //         .classed("bigger", true);
+		    //     //  }
+
+		    //     // Spouses names.
+		    //     var spouseNames = svg.append("g").selectAll("text").data(information.descendants());
+		    //     spouseNames.enter().append("text")
+		    //         .text(function(d) {
+		    //             return d.data.spouse;
+		    //         })
+		    //         .attr("x", function(d) {
+		    //             return d.x + 30;
+		    //         })
+		    //         .attr("y", function(d) {
+		    //             return d.y + 25;
+		    //         })
+		    //         .classed("bigger", true);
+
+		    // });
+		}
+    </script>
+    </div>
+</div>
+
+   
+</body>
+</html>
