@@ -45,9 +45,9 @@ struct Familia{
         sT = 0;
     }
 
-    void print(int i){
+    void printEst(){
 
-        ofstream out("data/FamiliaEstrutura_" + to_string(i) + ".csv");
+        ofstream out("data/Estrutura.csv");
 
         cout << M << " " << F << " " << T << endl;
         cout << sM << " " << sF << " " << sT << endl << endl;
@@ -64,6 +64,43 @@ struct Familia{
     }
 };
 
+Familia f[9];
+
+void printEst(){
+    ofstream out("data/Est.csv");
+    out << "family,porcentagem\n";
+    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(3) << f[i].sT/(f[i].T*1.0) << endl;
+    out.close();
+}
+
+void printM(){
+    ofstream out("data/Est_M.csv");
+    out << "family,porcentagem\n";
+    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(3) << f[i].M/(f[i].T*1.0) << endl;
+    out.close();
+}
+
+void printF(){
+    ofstream out("data/Est_F.csv");
+    out << "family,porcentagem\n";
+    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(3) << f[i].F/(f[i].T*1.0) << endl;
+    out.close();
+}
+
+void printMS(){
+    ofstream out("data/Est_MS.csv");
+    out << "family,porcentagem\n";
+    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(3) << f[i].sM/(f[i].sT*1.0) << endl;
+    out.close();
+}
+
+void printFS(){
+    ofstream out("data/Est_FS.csv");
+    out << "family,porcentagem\n";
+    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(3) << f[i].sF/(f[i].sT*1.0) << endl;
+    out.close();
+}
+
 void contStructure(){
 
     map<string,int> mapa;
@@ -77,8 +114,6 @@ void contStructure(){
     mapa["603481"] = 6;
     mapa["791533"] = 7;
     mapa["903988"] = 8;
-
-    Familia f[9];
 
     for(int i=0;i<9;i++) f[i].init();
 
@@ -95,9 +130,12 @@ void contStructure(){
         
     }
 
-    for(int i=0;i<9;i++) {
-        f[i].print(i+1);
-    }
+    printEst();
+    printM();
+    printF();
+    printMS();
+    printFS();
+    
 }
 
 //TODO : PRINTS

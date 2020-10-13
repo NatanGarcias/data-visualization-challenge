@@ -1,4 +1,18 @@
-alcohol,psychosis,anxiety-non-trauma,somatic_disorder,eating,bipolar spectrum_illness,depression,interpersonal trauma,PD-Cluster_C-anxiety,PD-Cluster_B-emotional,PD,Impulse_control_disorder,obesity,cardiovascular,COPD,asthma,immune-autoimmune
-4,3,3,3,0,2,14,1,0,1,4,2,4,9,3,4,0
-9.524,7.143,7.143,7.143,0.000,4.762,33.333,2.381,0.000,2.381,9.524,4.762,9.524,21.429,7.143,9.524,0.000
-9,7,7,7,0,4,33,2,0,2,9,4,9,21,7,9,0
+atr_clinico,porcentagem
+alcohol,0.10
+psychosis,0.07
+anxiety-non-trauma,0.07
+somatic_disorder,0.07
+eating,0.00
+bipolar_spectrum_illness,0.05
+depression,0.33
+interpersonal_trauma,0.02
+PD-Cluster_C-anxiety,0.00
+PD-Cluster_B-emotional,0.02
+PD,0.10
+Impulse_control_disorder,0.05
+obesity,0.10
+cardiovascular,0.21
+COPD,0.07
+asthma,0.10
+immune-autoimmune,0.00

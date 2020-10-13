@@ -7,7 +7,7 @@ template<typename T> ostream& operator<<(ostream &os, const vector<T> &v) { os <
 #define se second
 
 vector<vector<string>> data;
-ofstream out3("data/Nuvem.txt");
+//ofstream out3("data/Nuvem.txt");
 
 //TODO : LEITURA
 void leitura(){
@@ -34,8 +34,8 @@ void leitura(){
 }
 
 struct Familia{
-    string l[17] = {"alcohol","psychosis","anxiety-non-trauma","somatic_disorder","eating","bipolar spectrum_illness","depression",
-                    "interpersonal trauma","PD-Cluster_C-anxiety","PD-Cluster_B-emotional","PD","Impulse_control_disorder","obesity",
+    string l[17] = {"alcohol","psychosis","anxiety-non-trauma","somatic_disorder","eating","bipolar_spectrum_illness","depression",
+                    "interpersonal_trauma","PD-Cluster_C-anxiety","PD-Cluster_B-emotional","PD","Impulse_control_disorder","obesity",
                     "cardiovascular","COPD","asthma","immune-autoimmune" };
     int v[17];
     int T;
@@ -55,21 +55,32 @@ struct Familia{
         for(int i=0;i<17;i++) out <<  (int) (100 * v[i]/(T*1.0)) << ",\n"[i == 16];
 
         out.close();
+    }
+
+    void print2(int k){
+        ofstream out("data/families/Familia_" + to_string(k+1) + ".csv");
+        out << "atr_clinico,porcentagem\n";
+        //for(int i=0;i<17;i++) out << l[i] << ',' << (int) (100 * v[i]/(T*1.0)) << endl;
+        for(int i=0;i<17;i++) out << l[i] << ',' << fixed << setprecision(2) << v[i]/(T*1.0) << endl;
+        out.close();
+    }
+
+    void printNuvem(int k){
 
         ofstream out2("data/Nuvem_Fam_" + to_string(k+1) + ".txt");
 
         for(int i=0;i<17;i++){
             for(int j=0;j<v[i];j++){
                 out2 << l[i] << " ";
-                out3 << l[i] << " ";
+                //out3 << l[i] << " ";
             }
             if(v[i]) out2 << endl;
-            if(v[i]) out3 << endl;
+            //if(v[i]) out3 << endl;
         } 
         out2 << endl;
-        out3 << endl << endl;
-        
         out2.close();
+
+        //out3 << endl << endl;
     }
 };
 
@@ -84,6 +95,15 @@ void printAtr(int k){
     for(int i=0;i<9;i++) out << fixed  << setprecision(3) << 100 * f[i].v[k]/(f[i].T*1.0) << ",\n"[i == 8];
     for(int i=0;i<9;i++) out <<  (int) (100 * f[i].v[k]/(f[i].T*1.0)) << ",\n"[i == 8];
 
+    out.close();
+}
+
+void printAtr2(int k){
+
+    ofstream out("data/atributos/Atributos_" + to_string(k+1) + ".csv");
+    out << "family,porcentagem\n";
+    //for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << (int) (100 * f[i].v[k]/(f[i].T*1.0)) << endl;
+    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(2) << (f[i].v[k]/(f[i].T*1.0)) << endl;
     out.close();
 }
 
@@ -113,13 +133,22 @@ void contAttr(){
         }
     }
 
-    for(int i=0;i<9;i++) {
+    /*//Print Antigo
+    for(int i=0;i<9;i++)
         f[i].print(i);
-    }
-
-    for(int i=0;i<17;i++){
+    for(int i=0;i<17;i++)
         printAtr(i);
-    }
+    */
+
+    //Print Novo e Usado
+    for(int i=0;i<9;i++)
+        f[i].print2(i);
+
+    for(int i=0;i<17;i++)
+        printAtr2(i);
+
+    //Fechando arquivo da nuvem
+    //out3.close();
 }
 
 //TODO : PRINTS

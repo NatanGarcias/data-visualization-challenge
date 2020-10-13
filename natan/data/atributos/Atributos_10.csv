@@ -1,4 +1,10 @@
-Família_1,Família_2,Família_3,Família_4,Família_5,Família_6,Família_7,Família_8,Família_9
-0,0,4,0,3,1,0,0,0
-0.000,0.000,12.121,0.000,14.286,2.381,0.000,0.000,0.000
-0,0,12,0,14,2,0,0,0
+family,porcentagem
+family_1,0.00
+family_2,0.00
+family_3,0.12
+family_4,0.00
+family_5,0.14
+family_6,0.02
+family_7,0.00
+family_8,0.00
+family_9,0.00
