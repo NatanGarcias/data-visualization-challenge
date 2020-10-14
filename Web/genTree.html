@@ -348,7 +348,9 @@
                        	outputText += "✝" + d.data.deathYear + "\n";
           
                        var outputTextAttributes = "";
-          
+          				
+          			   if(d.data.deathCause != "0")
+          					outputTextAttributes +=  d.data.deathCause + "\n\n";
                        if (d.data.alcohol == "1") 
                            outputTextAttributes += "Alcohol\n";
                        
@@ -478,6 +480,9 @@
                        	outputText += "✝: " + d.data.spouse_deathYear + "\n";
           
                        var outputTextAttributes = "";
+
+      				   if(d.data.spouse_deathCause != "0")
+      					outputTextAttributes +=  d.data.spouse_deathCause + "\n\n";
           
                        if (d.data.spouse_alcohol == "1") 
                            outputTextAttributes += "Alcohol\n";
