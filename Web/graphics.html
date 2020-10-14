@@ -40,7 +40,7 @@
           </b>
           <form id="familyDetails">
             <select id="familyComboBox">
-              <option value="0"></option>
+              <option value="0">Selecione a família a ser analisada</option>
               <option value="1">One (Small) - ID 38</option>
               <option value="2">Two (Small) - ID 149</option>
               <option value="3">Three (Very Large) - ID 27251</option>
@@ -92,14 +92,14 @@
            var selectedFamily = tmp.options[tmp.selectedIndex].value;
           
            if (print > 0) {
-               svg.selectAll('*').remove();
+              svg.selectAll('*').remove();
            } else {			
-          svg = d3.select("body").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-           .append("g")
-          .attr("transform", 
-          	"translate(" + margin.left + "," + margin.top + ")");
+              svg = d3.select("body").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
            }
           
            if (selectedFamily != 0) 
@@ -187,18 +187,17 @@
                svg.append("g")
                    .style("font-size", "13px")
                    .call(d3.axisLeft(y).ticks(8, "%"))
-           .selectAll("text")
+                .selectAll("text")
                  		.attr("dx", "-0.81em");
           
-          svg.append("g")	
-           .append("text")
-                   .attr("fill", "#000")
-                   .attr("transform", "rotate(-90)")
-                   .attr("y", 6)
-                   .attr("dy", "-3.51em")
-                   .style("text-anchor", "end")
-                   .text("Incidence (%)");		  
-                 
+                svg.append("g")	
+                .append("text")
+                        .attr("fill", "#000")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", "-3.51em")
+                        .style("text-anchor", "end")
+                        .text("Incidence (%)");		                  
           	});
           }
         </script>
