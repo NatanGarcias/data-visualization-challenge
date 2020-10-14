@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Graphics Families</title>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+
+    <style>
+	    .grid line {
+	      stroke: gray;
+	      stroke-opacity: 0.5;
+	      shape-rendering: crispEdges;
+	    }
+
+	    .grid path {
+	      stroke-width: 0;
+	    }
+    </style>
+    
+</head>
+<body>
+    <div class="wrapper">
+    <div class="sidebar">
+        <h2>BioVis 2020 Challenge</h2>
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Challenge & Approaches</a>
+            <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li></li>
+            <li><a href="genTree.html"><i class="fas fa-book"></i>Genealogic Trees</a>
+            <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graphics Families</a></li>
+            <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graphics Clinical Atributes</a></li>
+        </ul> 
+        <div class="social_media">
+          <a href="#"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+    <div class="main_content">
+         <div class="header">
+        <b><p style="font-size: 20px">Select family:</p></b> 
+        <form id="familyDetails">
+            <select id="familyComboBox">
+                <option value="0"></option>
+                <option value="1">One (Small) - ID 38</option>
+                <option value="2">Two (Small) - ID 149</option>
+                <option value="3">Three (Very Large) - ID 27251</option>
+                <option value="4">Four (Very Small) - ID 42623</option>
+                <option value="5">Five (Large) - ID 68939</option>
+                <option value="6">Six (Very Large) - ID 176860</option>
+                <option value="7">Seven (Medium) - ID 603481</option>
+                <option value="8">Eight (Small) - ID 791533</option>
+                <option value="9">Nine (Very Small) - ID 903988</option>
+            </select>
+        </form>        
+    </div>  
+    <script>
+
+	    // Family additional details.
+	    var familyCodes = {
+	    	0: "Family 0",
+	        1: "Family 1",
+	        2: "Family 2",
+	        3: "Family 3",
+	        4: "Family 4",
+	        5: "Family 5",
+	        6: "Family 6",
+	        7: "Family 7",
+	        8: "Family 8",
+	        9: "Family 9"
+	    };
+
+		// Refresh page when changing checbox or combo box.
+		d3.select("#familyComboBox").on("change", update);
+		d3.selectAll('.cbox').on("change", update);
+
+		var print = 0;
+
+		// Insert code to import and parse CSV file here.
+		var data = [];
+		var svg;
+
+		var selectedFamily = "";
+        
+		function update() {
+		    var tmp = document.getElementById("familyComboBox");
+		    var selectedFamily = tmp.options[tmp.selectedIndex].value;
+
+		    //document.getElementById("familyDetailsText").innerHTML = familyCodes[selectedFamily];
+
+		    // if (print > 0) {
+		    //     svg.selectAll('*').remove();
+		    // } else {
+		    //     svg = d3.select("body").append("svg")
+		    //         .attr("width", 7350).attr("height", 1000) // Page sizes.
+		    //         .append("g").attr("transform", "translate(250, 50)");
+		    // }
+
+		    // if (selectedFamily != 0) 
+		    // 	print++;
+
+		    var datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families/";
+            
+		    if (selectedFamily == 0) 
+		        data = [];
+		    else if (selectedFamily == 1)
+		        datasetDirectory += "Familia_1.csv";
+		    else if (selectedFamily == 2)
+		        datasetDirectory += "Familia_2.csv";
+		    else if (selectedFamily == 3)
+		        datasetDirectory += "Familia_3.csv";
+		    else if (selectedFamily == 4)
+		        datasetDirectory += "Familia_4.csv";
+		    else if (selectedFamily == 5)
+		        datasetDirectory += "Familia_5.csv";
+		    else if (selectedFamily == 6)
+		        datasetDirectory += "Familia_6.csv";
+		    else if (selectedFamily == 7)
+		        datasetDirectory += "Familia_7.csv";
+		    else if (selectedFamily == 8)
+		        datasetDirectory += "Familia_8.csv";
+		    else if (selectedFamily == 9)
+		        datasetDirectory += "Familia_9.csv";
+            
+        //New ----------------------------------------------------
+
+			var margin = {top: 80, right: 40, bottom: 125, left: 300},
+	        width = 1000 - margin.left - margin.right,
+	        height = 520 - margin.top - margin.bottom;
+
+		    var x = d3.scaleBand().range([0, width]).padding(0.3);
+		    var y = d3.scaleLinear().range([height, 0]);
+		                
+		    var svg = d3.select("body").append("svg")
+		        .attr("width", width + margin.left + margin.right)
+		        .attr("height", height + margin.top + margin.bottom)
+		      .append("g")
+		        .attr("transform", 
+		              "translate(" + margin.left + "," + margin.top + ")");
+
+		    // gridlines in y axis function
+		    function make_y_gridlines() {		
+		        return d3.axisLeft(y)
+		            .ticks(5)
+		    }
+
+		    d3.csv(datasetDirectory).then(function(data) {
+
+		        data.forEach(function(d) {
+		              d.porcentagem = +d.porcentagem;
+		        });
+
+		        x.domain(data.map(function(d) { return d.atr_clinico; }));
+		        y.domain([0, d3.max(data, function(d) { return d.porcentagem; })]);
+
+		        //Adicionando o titulo do gráfico
+		        svg.append("text")
+		          .attr("transform", "translate(100,0)")
+		          .attr("x", 175)
+		          .attr("y", -25)
+		          .attr("font-size", "24px")
+		          .text(familyCodes[selectedFamily] + " - clinical atributes incidence in suicide cases")
+		        
+		         // add the Y gridlines
+		         svg.append("g")			
+		            .attr("class", "grid")
+		            .call(make_y_gridlines()
+		                .tickSize(-width)
+		                .tickFormat("")
+		            )
+
+		        // append the rectangles for the bar chart
+		        svg.selectAll(".bar")
+		            .data(data)
+		          .enter().append("rect")
+		            .style("fill", "#FFAE49")
+		            .attr("class", "bar")
+		            .attr("x", function(d) { return x(d.atr_clinico); })
+		            .attr("width", x.bandwidth())
+		            .attr("y", function(d) { return y(d.porcentagem); })
+		            .attr("height", function(d) { return height - y(d.porcentagem); });
+
+
+		        // add the x Axis
+		        svg.append("g")
+		            .attr("transform", "translate(0," + height + ")")
+		            .call(d3.axisBottom(x))
+		          .selectAll("text")
+		            .style("font-size", "13px")
+		            .style("text-anchor", "end")
+		            .attr("dx", "-.6em") //Distancia da palavra para o eixo
+		            .attr("transform", "rotate(-45)" ); //Angulo da palavra
+
+		        // add the y Axis
+		        svg.append("g")
+		            .style("font-size", "13px")
+		            .call(d3.axisLeft(y).ticks(8, "%"))
+				  .selectAll("text")
+            		.attr("dx", "-0.81em");
+				
+				svg.append("g")	
+				  .append("text")
+		            .attr("fill", "#000")
+		            .attr("transform", "rotate(-90)")
+		            .attr("y", 6)
+		            .attr("dy", "-3.51em")
+		            .style("text-anchor", "end")
+		            .text("Incidence (%)");
+				  
+		          
+	    	});
+		}
+    </script>
+    </div>
+</div>
+
+   
+</body>
+</html>

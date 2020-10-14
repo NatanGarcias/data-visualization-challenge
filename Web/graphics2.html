@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Graph Families</title>
+    <title>Graphics Clinical Atributes</title>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -27,10 +27,11 @@
         <h2>BioVis 2020 Challenge</h2>
         <ul>
             <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-            <li><a href="#"><i class="fas fa-book"></i>Problem Description</a>
-            <li><a href="#"><i class="fas fa-cubes"></i>Dataset</a></li></li>
+            <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Challenge & Approaches</a>
+            <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li></li>
             <li><a href="genTree.html"><i class="fas fa-book"></i>Genealogic Trees</a>
-            <li><a href="#"><i class="fas fa-object-group"></i>Graphics</a></li>
+            <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graphics Families</a></li>
+            <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graphics Clinical Atributes</a></li>
         </ul> 
         <div class="social_media">
           <a href="#"><i class="fab fa-github"></i></a>
@@ -38,19 +39,27 @@
     </div>
     <div class="main_content">
          <div class="header">
-        <b><p style="font-size: 20px">Select family:</p></b> 
+        <b><p style="font-size: 20px">Select Atribute Clinical:</p></b> 
         <form id="familyDetails">
             <select id="familyComboBox">
                 <option value="0"></option>
-                <option value="1">One (Small) - ID 38</option>
-                <option value="2">Two (Small) - ID 149</option>
-                <option value="3">Three (Very Large) - ID 27251</option>
-                <option value="4">Four (Very Small) - ID 42623</option>
-                <option value="5">Five (Large) - ID 68939</option>
-                <option value="6">Six (Very Large) - ID 176860</option>
-                <option value="7">Seven (Medium) - ID 603481</option>
-                <option value="8">Eight (Small) - ID 791533</option>
-                <option value="9">Nine (Very Small) - ID 903988</option>
+                <option value="1">Alcohol</option>
+                <option value="2">Psychosis</option>
+                <option value="3">Anxiety-non-trauma</option>
+                <option value="4">Somatic Disorder</option>
+                <option value="5">Eating</option>
+                <option value="6">Bipolar Spectrum Illness</option>
+                <option value="7">Depression</option>
+                <option value="8">Interpersonal Trauma</option>
+				<option value="9">PD-Cluster C-anxiety</option>
+				<option value="10">PD-Cluster B-emotional</option>
+                <option value="11">PD</option>
+                <option value="12">Impulse Control Disorder</option>
+                <option value="13">Obesity</option>
+                <option value="14">Cardiovascular</option>
+                <option value="15">COPD</option>
+                <option value="16">Asthma</option>
+                <option value="17">Immune-autoimmune</option>
             </select>
         </form>        
     </div>  
@@ -58,16 +67,24 @@
 
 	    // Family additional details.
 	    var familyCodes = {
-	    	0: "</br></br> Family additional details will be shown here.",
-	        1: "</br></br> Duplicated spouses: 44862 and 49224. </br></br> No parent information: 60064 and 37544. </br></br> Duplicated information in dataset: 40788 (didn't suicide)",
-	        2: "</br></br> Duplicated spouses: 48671, 42088, 54822 and 30890. </br></br> No parent information:  5173. </br>",
-	        3: "</br></br> Duplicated spouses: 32123, 13548, 23028, 1518, 22245 and 39828. </br></br> No parent information:  18802, 55985 and 41825. </br>",
-	        4: "</br></br> Duplicated spouses:  20110 and 67194. </br></br> No parent information:  39747. </br>",
-	        5: "</br></br> Duplicated spouses: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br></br> Duplicated information in dataset: 40788. </br>",
-	        6: "</br></br> Duplicated spouses: 4029, 4032, 55880, 66840, 20403, 21086, 24919,  45901, 37559, 38393, 62035, 30675, 56686, 22640, 47730,  67347 and 27983. </br></br> No parent information:  66789, 39413, 18275 and 35985. </br>",
-	        7: "</br></br> Duplicated spouses:  41211 and 40117. </br></br> No parent information:  4005. </br>",
-	        8: "</br></br> Duplicated spouses:  2782,  45317, 32833, 67529 and 9146. </br></br> No parent information:  65715. </br>", 
-	        9: "</br></br> Duplicated spouses:  17581 and 6436. </br></br> No parent information:  60996. </br>"
+            0: "Nada",
+	    	1: "Alcohol",
+	        2: "Psychosis",
+	        3: "Anxiety-non-trauma",
+	        4: "Somatic Disorder",
+	        5: "Eating",
+	        6: "Bipolar Spectrum Illness",
+	        7: "Depression",
+	        8: "Interpersonal Trauma",
+	        9: "PD-Cluster C-anxiety",
+	        10: "PD-Cluster B-emotional",
+            11: "PD",
+            12: "Impulse Control Disorder",
+            13: "Obesity",
+            14: "Cardiovascular",
+            15: "COPD",
+            16: "Asthma",
+            17: "Immune-autoimmune"
 	    };
 
 		// Refresh page when changing checbox or combo box.
@@ -81,12 +98,8 @@
 		var svg;
 
 		var selectedFamily = "";
-
         
 		function update() {
-
-            console.log("auhsaush");
-        
 		    var tmp = document.getElementById("familyComboBox");
 		    var selectedFamily = tmp.options[tmp.selectedIndex].value;
 
@@ -103,28 +116,44 @@
 		    // if (selectedFamily != 0) 
 		    // 	print++;
 
-		    var datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families/";
+		    var datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/atributos/";
             
 		    if (selectedFamily == 0) 
 		        data = [];
 		    else if (selectedFamily == 1)
-		        datasetDirectory += "Familia_1.csv";
+		        datasetDirectory += "Atributos_1.csv";
 		    else if (selectedFamily == 2)
-		        datasetDirectory += "Familia_2.csv";
+		        datasetDirectory += "Atributos_2.csv";
 		    else if (selectedFamily == 3)
-		        datasetDirectory += "Familia_3.csv";
+		        datasetDirectory += "Atributos_3.csv";
 		    else if (selectedFamily == 4)
-		        datasetDirectory += "Familia_4.csv";
+		        datasetDirectory += "Atributos_4.csv";
 		    else if (selectedFamily == 5)
-		        datasetDirectory += "Familia_5.csv";
+		        datasetDirectory += "Atributos_5.csv";
 		    else if (selectedFamily == 6)
-		        datasetDirectory += "Familia_6.csv";
+		        datasetDirectory += "Atributos_6.csv";
 		    else if (selectedFamily == 7)
-		        datasetDirectory += "Familia_7.csv";
+		        datasetDirectory += "Atributos_7.csv";
 		    else if (selectedFamily == 8)
-		        datasetDirectory += "Familia_8.csv";
+		        datasetDirectory += "Atributos_8.csv";
 		    else if (selectedFamily == 9)
-		        datasetDirectory += "Familia_9.csv";
+		        datasetDirectory += "Atributos_9.csv";
+            else if (selectedFamily == 10)
+		        datasetDirectory += "Atributos_10.csv";
+		    else if (selectedFamily == 11)
+		        datasetDirectory += "Atributos_11.csv";
+		    else if (selectedFamily == 12)
+		        datasetDirectory += "Atributos_12.csv";
+		    else if (selectedFamily == 13)
+		        datasetDirectory += "Atributos_13.csv";
+		    else if (selectedFamily == 14)
+		        datasetDirectory += "Atributos_14.csv";
+		    else if (selectedFamily == 15)
+		        datasetDirectory += "Atributos_15.csv";
+		    else if (selectedFamily == 16)
+		        datasetDirectory += "Atributos_16.csv";
+		    else if (selectedFamily == 17)
+		        datasetDirectory += "Atributos_17.csv";
             
         //New ----------------------------------------------------
 
@@ -152,18 +181,19 @@
 
 		        data.forEach(function(d) {
 		              d.porcentagem = +d.porcentagem;
+                      console.log(d.porcentagem);
 		        });
 
-		        x.domain(data.map(function(d) { return d.atr_clinico; }));
-		        y.domain([0, d3.max(data, function(d) { return d.porcentagem; })]);
+		        x.domain(data.map(function(d) { return d.family; }));
+		        y.domain([0, d3.max(data, function(d) { return d.porcentagem + 0.01; })]);
 
 		        //Adicionando o titulo do gráfico
 		        svg.append("text")
 		          .attr("transform", "translate(100,0)")
 		          .attr("x", 175)
-		          .attr("y", -15)
+		          .attr("y", -25)
 		          .attr("font-size", "24px")
-		          .text("Family 1 - clinical atributes incidence in suicide cases")
+		          .text(familyCodes[selectedFamily] + " incidence in suicide cases")
 		        
 		         // add the Y gridlines
 		         svg.append("g")			
@@ -177,9 +207,9 @@
 		        svg.selectAll(".bar")
 		            .data(data)
 		          .enter().append("rect")
-		            .style("fill", "#FFAE49")
+		            .style("fill", "#02888F")
 		            .attr("class", "bar")
-		            .attr("x", function(d) { return x(d.atr_clinico); })
+		            .attr("x", function(d) { return x(d.family); })
 		            .attr("width", x.bandwidth())
 		            .attr("y", function(d) { return y(d.porcentagem); })
 		            .attr("height", function(d) { return height - y(d.porcentagem); });
@@ -199,15 +229,18 @@
 		        svg.append("g")
 		            .style("font-size", "13px")
 		            .call(d3.axisLeft(y).ticks(8, "%"))
-		          .append("text")
+				  .selectAll("text")
+            		.attr("dx", "-0.81em");
+				
+				svg.append("g")	
+				  .append("text")
 		            .attr("fill", "#000")
 		            .attr("transform", "rotate(-90)")
 		            .attr("y", 6)
-		            .attr("dy", "-3.71em")
+		            .attr("dy", "-3.51em")
 		            .style("text-anchor", "end")
-		            .text("Incidence (%)")
-		          .selectAll("text")
-            		.attr("dx", "-1.71em");
+		            .text("Incidence (%)");
+				  
 		          
 	    	});
 		}
