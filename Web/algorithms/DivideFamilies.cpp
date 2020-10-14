@@ -8,11 +8,10 @@
 #include <assert.h>
 #include <algorithm>
 
+#define DatasetDirectory "/home/geflx/github/data-visualization-challenge/Web/data/datasets/TenFamiliesStructure.csv"
+#define AtributesDirectory "/home/geflx/github/data-visualization-challenge/Web/data/datasets/custom/TenFamiliesAttributesCustom.csv"
 
-#define DatasetDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesStructure.csv"
-#define AtributesDirectory "/home/geflx/github/data-visualization-challenge/Datasets/TenFamiliesAttributes2.csv"
-
-#define OutputDirectory "/home/geflx/github/data-visualization-challenge/Web/Back-end/Family_JSON/"
+#define OutputDirectory "/home/geflx/Desktop/"
 #define MAX_GENERATIONS 1000
 
 struct Person{
