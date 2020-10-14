@@ -2,21 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Chanllenge and Approaches</title>
+    <title>Desafio & Abordagens</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   </head>
   <body>
     <div class="wrapper">
       <div class="sidebar">
-        <h2>BioVis 2020 Challenge</h2>
+        <h2>Desafio BioVis 2020</h2>
         <ul>
-          <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Challenge & Approaches</a>
+          <li><a href="index.html"><i class="fas fa-home"></i>Início</a></li>
+          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Desafio & Abordagens</a>
           <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li>
-          <li><a href="genTree.html"><i class="fas fa-book"></i>Family Trees</a>
-          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graphics Families</a></li>
-          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graphics Clinical Atributes</a></li>
+          </li>
+          <li><a href="genTree.html"><i class="fas fa-book"></i>Árvores Genealógicas</a>
+          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Gráficos: Famílias</a></li>
+          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Gráficos: Atributos Clínicos</a></li>
         </ul>
         <div class="social_media">
           <a href="https://github.com/geflx/data-visualization-challenge"><i class="fab fa-github"></i></a>
@@ -25,7 +26,7 @@
       <div class="main_content">
         <div class="header">
           <b>
-            <p style="font-size: 20px">Challenge description and detailed approaches</p>
+            <p style="font-size: 20px">Descrição do Desafio e Abordagens</p>
           </b>
         </div>
         <div class="info">
@@ -44,7 +45,7 @@
             <p> Abaixo são descritas as estratégias utilizadas para resolver estas tarefas. </p>
           </div>
           <div>
-            <h1>Family Trees</h1>
+            <h1>Árvores Genealógicas</h1>
           </div>
           <div>Árvores genealógicas são muito úteis para visualizar a estrutura geral de uma família e 
             também explorar individualmente seus integrantes. Famílias quando analisadas somente em 
@@ -75,34 +76,32 @@
             casos semelhantes em uma família, e ainda deixar a critério do usuário a escolha do grau de 
             parentesco analisado (irmão, pai, avô, tios, etc.). Esta estratégia foi desenvolvida visando 
             as tarefas (1) e (4) apresentadas acima. A ferramenta encontra-se disponível na página 
-            <a href="genTree.html">Family Trees.</a>
+            <a href="genTree.html">Árvores Genealógicas.</a>
+          </div>
+        </br>
+          <div>
+            <h1>Gráficos de Barras</h1>
           </div>
           <div>
-            <h1>Bar Graphs</h1>
-          </div>
-          <div>
-            Gráfico de barras são altamente recomendáveis quando se precisa comparar dados, 
+            Gráficos de barras são altamente recomendáveis quando se precisa comparar dados, 
             a partir deles nossa cérebro consegue ter uma melhor percepção das diferenças entre 
-            os dados apresentados, no nosso contexto, utilizamos os gráficos de barras na seguintes situações:
+            os dados apresentados. Neste trabalho, utilizamos os gráficos de barras na seguintes situações:
             </br>
           </div>
           <ol>
-            <li> <b>Graphics Families</b> onde apresentamos a porcentagem da presença de alguns atributos clínicos em casos de suicídio
-              em uma família em específico, visto que isso permite que encontremos facilmente quais atributos clínicos são mais presentes em cada família. 
-              Os gráficos disponíveis nessa abordagem encontram-se na página. 
+            <li> <b>Gráficos por famílias</b> onde apresentamos a porcentagem da presença de alguns atributos clínicos em casos de suicídio
+              em uma família em específico, de forma a permitir ao usuário analisar facilmente quais atributos clínicos são mais presentes em cada família. 
+              Os gráficos disponíveis nessa abordagem encontram-se na página <a href="graphics.html">Gráficos: Famílias.</a>
             </li>
-            <a href="graphics.html">Graphics Families.</a>
-            <div> </br> Logo abaixo segue um exemplo: </div>
+            <div> </br> Abaixo é apresentado o gráfico para a "família seis": </div>
             <div class="img-container">
               <img src="images/graphics_families.png" width="760" height="503"/> 
             </div>
-            <li> <b>Graphics Clinical Atributes</b> , que, de maneira semelhante ao anterior, apresenta a porcentagem da presença de um atributo clínicos em casos 
-              de suicídio em relação as famílias analisadas, permitindo assim que visualizemos se algum atributo clínico afeta mais algumas 
-              famílias do que outras, além de quais deles aparecem em maior escala e quais atributos são mais recorrentes.
-              Os gráficos disponíveis nessa abordagem encontram-se na página. 
+            <li> <b>Gráficos por atributos clínicos</b>, que de maneira semelhante à anterior, apresenta a porcentagem da presença de um atributo clínicos em casos 
+              de suicídio em relação às famílias analisadas, permitindo ao usuário visualizar quais atributos clínicos afetam mais uma família do que as demais, além ilustrar quais atributos aparecem em maior escala e quais são mais recorrentes.
+              Os gráficos disponíveis nessa abordagem encontram-se na página <a href="graphics2.html">Gráficos: Atributos Clínicos.</a>
             </li>
-            <a href="graphics2.html">Graphics Clinical Atributes.</a>
-            <div> </br> Logo abaixo segue um exemplo: </div>
+            <div> </br> Abaixo é apresentado o gráfico para o atributo "depressão": </div>
             <div class="img-container">
               <img src="images/graphics_clinical_atributes.png" width="752" height="482"/> 
             </div>

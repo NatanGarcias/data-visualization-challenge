@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Graphics Clinical Atributes</title>
+    <title>Gráficos: Atributos Clínicos</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
@@ -19,15 +19,15 @@
   <body>
     <div class="wrapper">
       <div class="sidebar">
-        <h2>BioVis 2020 Challenge</h2>
+        <h2>Desafio BioVis 2020</h2>
         <ul>
-          <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Challenge & Approaches</a>
+          <li><a href="index.html"><i class="fas fa-home"></i>Início</a></li>
+          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Desafio & Abordagens</a>
           <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li>
           </li>
-          <li><a href="genTree.html"><i class="fas fa-book"></i>Family Trees</a>
-          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graphics Families</a></li>
-          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graphics Clinical Atributes</a></li>
+          <li><a href="genTree.html"><i class="fas fa-book"></i>Árvores Genealógicas</a>
+          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Gráficos: Famílias</a></li>
+          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Gráficos: Atributos Clínicos</a></li>
         </ul>
         <div class="social_media">
           <a href="#"><i class="fab fa-github"></i></a>
@@ -36,11 +36,11 @@
       <div class="main_content">
         <div class="header">
           <b>
-            <p style="font-size: 20px">Select Clinical Atribute:</p>
+            <p style="font-size: 20px">Selecione o Atributo Clínico:</p>
           </b>
           <form id="familyDetails">
             <select id="familyComboBox">
-              <option value="0">Selecione o atributo clínico a ser analisado</option>
+              <option value="0"></option>
               <option value="1">Alcohol</option>
               <option value="2">Psychosis</option>
               <option value="3">Anxiety-non-trauma</option>
@@ -184,7 +184,7 @@
                  .attr("x", 175)
                  .attr("y", -25)
                  .attr("font-size", "24px")
-                 .text(familyCodes[selectedFamily] + " incidence in suicide cases")
+                 .text(familyCodes[selectedFamily] + " - Incidência em casos de suicídio")
                
                 // add the Y gridlines
                 svg.append("g")			
@@ -230,7 +230,7 @@
                    .attr("y", 6)
                    .attr("dy", "-3.51em")
                    .style("text-anchor", "end")
-                   .text("Incidence (%)");
+                   .text("Incidência (%)");
            
                  
           	});

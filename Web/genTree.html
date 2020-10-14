@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Family Tree</title>
+    <title>Árvores Genealógicas</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
@@ -9,15 +9,15 @@
   <body>
     <div class="wrapper">
       <div class="sidebar">
-        <h2>BioVis 2020 Challenge</h2>
+        <h2>Desafio BioVis 2020</h2>
         <ul>
-          <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
-          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Challenge & Approaches</a>
+          <li><a href="index.html"><i class="fas fa-home"></i>Início</a></li>
+          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Desafio & Abordagens</a>
           <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li>
           </li>
-          <li><a href="genTree.html"><i class="fas fa-book"></i>Family Trees</a>
-          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graphics Families</a></li>
-          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graphics Clinical Atributes</a></li>
+          <li><a href="genTree.html"><i class="fas fa-book"></i>Árvores Genealógicas</a>
+          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Gráficos: Famílias</a></li>
+          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Gráficos: Atributos Clínicos</a></li>
         </ul>
         <div class="social_media">
           <a href="#"><i class="fab fa-github"></i></a>
@@ -26,20 +26,20 @@
       <div class="main_content">
         <div class="header">
           <b>
-            <p style="font-size: 20px">Select family:</p>
+            <p style="font-size: 20px">Selecione a família:</p>
           </b>
           <form id="familyDetails">
             <select id="familyComboBox">
-              <option value="0">Selecione a família a ser analisada</option>
-              <option value="1">One (Small) - ID 38</option>
-              <option value="2">Two (Small) - ID 149</option>
-              <option value="3">Three (Very Large) - ID 27251</option>
-              <option value="4">Four (Very Small) - ID 42623</option>
-              <option value="5">Five (Large) - ID 68939</option>
-              <option value="6">Six (Very Large) - ID 176860</option>
-              <option value="7">Seven (Medium) - ID 603481</option>
-              <option value="8">Eight (Small) - ID 791533</option>
-              <option value="9">Nine (Very Small) - ID 903988</option>
+              <option value="0"></option>
+              <option value="1">Um (Pequena) - ID 38</option>
+              <option value="2">Dois (Pequena) - ID 149</option>
+              <option value="3">Três (Muito grande) - ID 27251</option>
+              <option value="4">Quatro (Pequena) - ID 42623</option>
+              <option value="5">Cinco (Grande) - ID 68939</option>
+              <option value="6">Seis (Muito grande) - ID 176860</option>
+              <option value="7">Sete (Média) - ID 603481</option>
+              <option value="8">Oito (Pequena) - ID 791533</option>
+              <option value="9">Nove (Muito pequena) - ID 903988</option>
             </select>
           </form>
         </div>
@@ -52,8 +52,8 @@
           <tr>
             <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease</td>
             <td rowspan="4">
-              <p id="familyDetailsText"> Family additional details will be shown here. </p>
-              </br><b>Note</b>: The above tree elements weren't printed due to tree structure limitations (such as duplicated spouses) or lack of parent information in dataset.
+              <p id="familyDetailsText"> Detalhes adicionais da família serão mostrados aqui. </p>
+              </br><b>Nota</b>: Os elementos identificados acima não foram impressos na árvore devido à erros do dataset (como informações duplicadas ou ausência de parentesco) ou limitações da estrutura de dados (como a impossibilidade de representar múltiplos cônjuges).
             </td>
           </tr>
           <tr>
@@ -115,16 +115,16 @@
         <script>
           // Family additional details.
           var familyCodes = {
-          	0: "</br></br> Family additional details will be shown here.",
-              1: "</br></br> Duplicated spouses: 44862 and 49224. </br></br> No parent information: 60064 and 37544. </br></br> Duplicated information in dataset: 40788 (didn't suicide)",
-              2: "</br></br> Duplicated spouses: 48671, 42088, 54822 and 30890. </br></br> No parent information:  5173. </br>",
-              3: "</br></br> Duplicated spouses: 32123, 13548, 23028, 1518, 22245 and 39828. </br></br> No parent information:  18802, 55985 and 41825. </br>",
-              4: "</br></br> Duplicated spouses:  20110 and 67194. </br></br> No parent information:  39747. </br>",
-              5: "</br></br> Duplicated spouses: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br></br> Duplicated information in dataset: 40788. </br>",
-              6: "</br></br> Duplicated spouses: 4029, 4032, 55880, 66840, 20403, 21086, 24919,  45901, 37559, 38393, 62035, 30675, 56686, 22640, 47730,  67347 and 27983. </br></br> No parent information:  66789, 39413, 18275 and 35985. </br>",
-              7: "</br></br> Duplicated spouses:  41211 and 40117. </br></br> No parent information:  4005. </br>",
-              8: "</br></br> Duplicated spouses:  2782,  45317, 32833, 67529 and 9146. </br></br> No parent information:  65715. </br>", 
-              9: "</br></br> Duplicated spouses:  17581 and 6436. </br></br> No parent information:  60996. </br>"
+          	0: "</br></br> Detalhes adicionais das famílias serão mostrados aqui.",
+              1: "</br></br> Cônjuges duplicados: 44862 and 49224. </br></br> Sem informação de parentesco: 60064 and 37544. </br></br> Identificação duplicada: 40788.",
+              2: "</br></br> Cônjuges duplicados: 48671, 42088, 54822 and 30890. </br></br> Sem informação de parentesco:  5173. </br>",
+              3: "</br></br> Cônjuges duplicados: 32123, 13548, 23028, 1518, 22245 and 39828. </br></br> Sem informação de parentesco:  18802, 55985 and 41825. </br>",
+              4: "</br></br> Cônjuges duplicados:  20110 and 67194. </br></br> Sem informação de parentesco:  39747. </br>",
+              5: "</br></br> Cônjuges duplicados: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br></br> Identificação duplicada: 40788. </br>",
+              6: "</br></br> Cônjuges duplicados: 4029, 4032, 55880, 66840, 20403, 21086, 24919,  45901, 37559, 38393, 62035, 30675, 56686, 22640, 47730,  67347 and 27983. </br></br> Sem informação de parentesco:  66789, 39413, 18275 and 35985. </br>",
+              7: "</br></br> Cônjuges duplicados:  41211 and 40117. </br></br> Sem informação de parentesco:  4005. </br>",
+              8: "</br></br> Cônjuges duplicados:  2782,  45317, 32833, 67529 and 9146. </br></br> Sem informação de parentesco:  65715. </br>", 
+              9: "</br></br> Cônjuges duplicados:  17581 and 6436. </br></br> Sem informação de parentesco:  60996. </br>"
           };
           
           // Refresh page when changing checbox or combo box.
