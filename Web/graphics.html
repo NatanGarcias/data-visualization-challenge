@@ -80,7 +80,7 @@
              
           //SVG		
           var svg;
-          var margin = {top: 80, right: 40, bottom: 125, left: 300},
+          var margin = {top: 75, right: 40, bottom: 125, left: 300},
           width = 1000 - margin.left - margin.right,
           height = 520 - margin.top - margin.bottom;
           
@@ -148,7 +148,7 @@
                //Adicionando o titulo do gráfico
                svg.append("text")
                  .attr("transform", "translate(100,0)")
-                 .attr("x", 175)
+                 .attr("x", 200)
                  .attr("y", -25)
                  .attr("font-size", "24px")
                  .text(familyCodes[selectedFamily] + " - Incidência de atributos clínicos em casos de suicídio")
@@ -185,7 +185,7 @@
           
                // add the y Axis
                svg.append("g")
-                   .style("font-size", "13px")
+                   .style("font-size", "14px")
                    .call(d3.axisLeft(y).ticks(8, "%"))
                 .selectAll("text")
                  		.attr("dx", "-0.81em");
