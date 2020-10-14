@@ -13,10 +13,9 @@
         <ul>
             <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
             <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Challenge & Approaches</a>
-            <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li></li>
-            <li><a href="genTree.html"><i class="fas fa-book"></i>Genealogic Trees</a>
-            <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graphics Families</a></li>
-            <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graphics Clinical Atributes</a></li>
+            <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Dataset</a></li></li>
+            <li><a href="genTree.html"><i class="fas fa-book"></i>Family Trees</a>
+            <li><a href="#"><i class="fas fa-object-group"></i>Graphics</a></li>
         </ul> 
         <div class="social_media">
           <a href="#"><i class="fab fa-github"></i></a>
@@ -49,7 +48,7 @@
           <tr>
             <td><input type="checkbox" id="cbAutoimmune" checked="checked" class="cbox"> Autoimmune Disease</td>
             <td rowspan="4"><p id="familyDetailsText"> Family additional details will be shown here. </p>
-            </br><b>Note</b>: The above elements of the three weren't printed due to tree's structure (such as duplicated spouses) or lack of parent information in dataset.
+            </br><b>Note</b>: The above tree elements weren't printed due to tree structure limitations (such as duplicated spouses) or lack of parent information in dataset.
             </td>
            </tr>
            <tr><td><input type="checkbox" id="cbDepression" checked="checked" class="cbox"> Depression</td></tr>
@@ -281,7 +280,7 @@
 		            })
 		            .attr("r", function(d) {
 		                if (d3.select(this).attr("opacity") == 1.0) {
-		                    return 12.5;
+		                    return 13.5;
 		                } else {
 		                    return 10;
 		                }
@@ -413,7 +412,7 @@
 		            })
 		            .attr("r", function(d) {
 		                if (d3.select(this).attr("opacity") == 1.0) {
-		                    return 12.5;
+		                    return 13.5;
 		                } else {
 		                    return 10;
 		                }
