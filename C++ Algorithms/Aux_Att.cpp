@@ -57,9 +57,9 @@ struct Familia{
     }
 
     void print2(int k){
-        ofstream out("data/families/Familia_" + to_string(k+1) + ".csv");
+        ofstream out("Familia_" + to_string(k+1) + ".csv");
+        
         out << "atr_clinico,porcentagem\n";
-
         for(int i=0;i<17;i++) out << l[i] << ',' << fixed << setprecision(2) << v[i]/(T*1.0) << endl;
         out.close();
     }
@@ -84,7 +84,7 @@ Familia f[9];
 
 void printAtr(int k){
 
-    ofstream out("data/Atributos_" + to_string(k+1) + ".csv");
+    ofstream out("Atributos_" + to_string(k+1) + ".csv");
 
     for(int i=0;i<9;i++) out << "Família_" << i+1 << ",\n"[i == 8];
     for(int i=0;i<9;i++) out << f[i].v[k] << ",\n"[i == 8];
@@ -96,9 +96,9 @@ void printAtr(int k){
 
 void printAtr2(int k){
 
-    ofstream out("data/atributos/Atributos_" + to_string(k+1) + ".csv");
+    ofstream out("Atributos_" + to_string(k+1) + ".csv");
     out << "family,porcentagem\n";
-    for(int i=0;i<9;i++) out << "family_" << i+1 << ',' << fixed << setprecision(2) << (f[i].v[k]/(f[i].T*1.0)) << endl;
+    for(int i=0;i<9;i++) out << "Familia " << i+1 << ',' << fixed << setprecision(2) << (f[i].v[k]/(f[i].T*1.0)) << endl;
     out.close();
 }
 
@@ -118,10 +118,12 @@ void contAttr(){
 
     for(int i=0;i<9;i++) f[i].init();
 
-    for(int i=0;i<data.size();i++){
+    for(int i=1;i<data.size();i++){
         f[ mapa[ data[i][0]] ].T++;
 
-        for(int j=12;j<=59;j++){
+
+        for(int j=12;j<=60;j+=3){
+            
             if( data[i][j] == "1"){
                 f[ mapa[ data[i][0]] ].v[(j-12)/3]++;
             }
@@ -149,7 +151,7 @@ void print(){
 int main(){
 
     leitura();
-    
+
     contAttr();
     
     return 0;
