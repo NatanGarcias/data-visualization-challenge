@@ -1,5 +1,9 @@
 # Data Visualization Challenge
 Data visualization tool created for a IEEE BioVis 2020's problem.
 
-Link para o Docs: 
-https://docs.google.com/document/d/1f3kS5kMklJO7n0cr2GQ7CLjPPSVgKyimhI9gDxnW0Aw/edit?usp=sharing
+###Link for visualization: https://geflx.github.iodata-visualization-challenge/
+
+
+## Project authors
+* [Gabriel Félix](https://github.com/geflx)
+* [Natan Garcias](https://github.com/NatanGarcias) 
