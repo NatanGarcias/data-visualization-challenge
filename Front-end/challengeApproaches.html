@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Desafio & Abordagens</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>IEEE BioVis 2020 Challenge</h2>
+        <ul>
+          <li><a href="../index.html"><i class="fas fa-home"></i>Home</a></li>
+          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Description & Approaches</a>
+          <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li>
+          </li>
+          <li><a href="genTree.html"><i class="fas fa-book"></i>Family Trees</a>
+          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graph by family</a></li>
+          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graph by clinical atributes</a></li>
+        </ul>
+        <div class="social_media">
+          <a href="https://github.com/geflx/data-visualization-challenge"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="main_content">
+        <div class="header">
+          <b>
+            <p style="font-size: 20px">Challenge and Approaches</p>
+          </b>
+        </div>
+        <div class="info">
+          <div>
+            <p>Given the two datasets "Family Attributes" and "Family Structure", tasks were specified for the creation of a visualization tool:</p>
+          </div>
+          <div>
+            <ol>
+              <li> (1) For a specific target individual, identify similar cases, including how they are related to each other (for example, if they co-occur in a particular family). </li>
+              <li> (2) To characterize the distribution of clinical attributes for suicide cases in families with high incidence rates (high relative number of cases). </li>
+              <li> (3) Characterize (that is, the relationship between cases and their attributes) suicide cases in families with a high incidence of a certain clinical attribute (such as depression). </li>
+              <li> (4) Compare clinical information for suicide cases with your immediate relatives (siblings, parents and children). </li>
+            </ol>
+          </div>
+          <div>
+            <p> Below are described the strategies used to solve these tasks. </p>
+          </div>
+          <div>
+            <h1>Family Trees</h1>
+          </div>
+          <div>Family trees are very useful for visualizing the general structure of a family and
+            also explore its members individually. Families when analyzed only in
+            general context can hide important information to assist professionals in
+            medical diagnostics. In view of these benefits, a visualization in
+            tree for each family, with the following characteristics:
+            </br>
+          </div>
+          <ol>
+            <li> <b> Filtering </b> for specific clinical attributes, where the filtered nodes are incremented
+              in opacity and circle diameter.
+            </li>
+            <li> <b> Interactivity, </b> presenting individual characteristics and attributes when sliding with the mouse over
+              the nodes.
+            </li>
+          </ol>
+          </br>
+          <div class="img-container">
+            <img src="images/tree_overview.png" width="800" height="450"/> 
+          </div>
+          <div> The figure above presents the tool's overview for the "family nine", where in
+            <b> (1) </b> it is possible to select the filters for the clinical attributes, so that if the person contains at least one of these attributes it will then be highlighted in the tree. In
+            <b> (2) </b> a brief technical description of the family is presented, indicating errors in the dataset or reporting other individuals not shown in the tree (such as the presence of multiple spouses, limited by viewing). Finally, in
+            <b> (3) </b> the family tree and an example of interactivity with the mouse that describes the characteristics of a person with depression in this family are presented (ID 13789).
+          </div>
+          <div>
+            In family trees it is possible to quickly identify
+            similar cases in a family, and still leave it up to the user to choose the degree of
+            kinship analyzed (brother, father, grandfather, uncles, etc.). This strategy was developed with a view to
+            tasks (1) and (4) presented above. The tool is available on the page
+            <a href="genTree.html"> Family Trees. </a>
+          </div>
+        </br>
+          <div>
+            <h1>Bar Graphs</h1>
+          </div>
+          <div>
+            Bar charts are highly recommended when you need to compare data,
+            from them our brain can have a better perception of the differences between
+            the data presented. This strategy was developed aiming at tasks (1) and (4) presented above.
+            And, in this work, we use bar graphs in the following situations:
+            </br>
+          </div>
+          <ol>
+            <li> <b> Charts by families </b> where we present the percentage of the presence of some clinical attributes in cases of suicide
+              in a specific family, in order to allow the user to easily analyze which clinical attributes are most present in each family.
+              The graphics available in this approach are found on the <a href="graphics.html"> Graphics: Families page. </a>
+            </li>
+            <div> </br> Below is the graph for family six: </div>
+            <div class="img-container">
+              <img src="images/graphics_families.png" width="764" height="496"/> 
+            </div>
+            <li> <b> Graphs by clinical attributes </b>, which similarly to the previous one, shows the percentage of the presence of a clinical attribute in cases
+              of suicide in relation to the families analyzed, allowing the user to see which clinical attributes affect one family more than the others, in addition to illustrating which attributes appear on a larger scale and which are more recurrent.
+              The graphics available in this approach are found on the <a href="graphics2.html"> Graphics: Clinical Attributes page. </a>
+            </li>
+            <div> </br> Below is the graph for the attribute "depression": </div>
+            <div class="img-container">
+              <img src="images/graphics_clinical_atributes.png" width="733" height="472"/> 
+            </div>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

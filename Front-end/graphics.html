@@ -19,54 +19,53 @@
   <body>
     <div class="wrapper">
       <div class="sidebar">
-        <h2>Desafio BioVis 2020</h2>
+        <h2>IEEE BioVis 2020 Challenge</h2>
         <ul>
-          <li><a href="../index.html"><i class="fas fa-home"></i>Início</a></li>
-          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Desafio & Abordagens</a>
+          <li><a href="../index.html"><i class="fas fa-home"></i>Home</a></li>
+          <li><a href="challengeApproaches.html"><i class="fas fa-book"></i>Description & Approaches</a>
           <li><a href="datasetPage1.html"><i class="fas fa-cubes"></i>Datasets</a></li>
           </li>
-          <li><a href="genTree.html"><i class="fas fa-book"></i>Árvores Genealógicas</a>
-          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Gráficos: Famílias</a></li>
-          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Gráficos: Atributos Clínicos</a></li>
-          <li>Criado por Gabriel Félix e Natan Garcias</a></li>
+          <li><a href="genTree.html"><i class="fas fa-book"></i>Family Trees</a>
+          <li><a href="graphics.html"><i class="fas fa-object-group"></i>Graph by family</a></li>
+          <li><a href="graphics2.html"><i class="fas fa-object-group"></i>Graph by clinical atributes</a></li>
         </ul>
         <div class="social_media">
-          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="https://github.com/geflx/data-visualization-challenge"><i class="fab fa-github"></i></a>
         </div>
       </div>
       <div class="main_content">
         <div class="header">
           <b>
-            <p style="font-size: 20px">Selecione a família:</p>
+            <p style="font-size: 20px">Select Family:</p>
           </b>
           <form id="familyDetails">
             <select id="familyComboBox">
               <option value="0"></option>
-              <option value="1">Um (Pequena) - ID 38</option>
-              <option value="2">Dois (Pequena) - ID 149</option>
-              <option value="3">Três (Muito grande) - ID 27251</option>
-              <option value="4">Quatro (Pequena) - ID 42623</option>
-              <option value="5">Cinco (Grande) - ID 68939</option>
-              <option value="6">Seis (Muito grande) - ID 176860</option>
-              <option value="7">Sete (Média) - ID 603481</option>
-              <option value="8">Oito (Pequena) - ID 791533</option>
-              <option value="9">Nove (Muito pequena) - ID 903988</option>
+              <option value="1">One (Small) - ID 38</option>
+              <option value="2">Two (Small) - ID 149</option>
+              <option value="3">Three (Very large) - ID 27251</option>
+              <option value="4">Four (Small) - ID 42623</option>
+              <option value="5">Five (Large) - ID 68939</option>
+              <option value="6">Six (Very large) - ID 176860</option>
+              <option value="7">Seven (Medium) - ID 603481</option>
+              <option value="8">Eigth (Small) - ID 791533</option>
+              <option value="9">Nine (Very small) - ID 903988</option>
             </select>
           </form>
         </div>
         <script>
           // Family additional details.
           var familyCodes = {
-          	0: "Família 0",
-              1: "Família 1",
-              2: "Família 2",
-              3: "Família 3",
-              4: "Família 4",
-              5: "Família 5",
-              6: "Família 6",
-              7: "Família 7",
-              8: "Família 8",
-              9: "Família 9"
+          	0: "Family 0",
+              1: "Family 1",
+              2: "Family 2",
+              3: "Family 3",
+              4: "Family 4",
+              5: "Family 5",
+              6: "Family 6",
+              7: "Family 7",
+              8: "Family 8",
+              9: "Family 9"
           };
           
           // Refresh page when changing checbox or combo box.
@@ -152,7 +151,7 @@
                  .attr("x", 200)
                  .attr("y", -25)
                  .attr("font-size", "24px")
-                 .text(familyCodes[selectedFamily] + " - Incidência de atributos clínicos em casos de suicídio")
+                 .text(familyCodes[selectedFamily] + " - Incidence of clinical attributes in suicide cases")
                
                 // add the Y gridlines
                 svg.append("g")			
