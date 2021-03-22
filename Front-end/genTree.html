@@ -120,7 +120,7 @@
               2: "</br> </br> Duplicate spouses: 48671, 42088, 54822 and 30890. </br> </br> No relationship information: 5173. </br>",
               3: "</br> </br> Duplicate spouses: 32123, 13548, 23028, 1518, 22245 and 39828. </br> </br> </br> </div> No relationship information: 18802, 55985 and 41825. </br>" ,
               4: "</br> </br> Duplicate spouses: 20110 and 67194. </br> </br> No relationship information: 39747. </br>",
-              5: "</br> </br> Duplicate spouses: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br> </br> Duplicate identification: 40788. < / br> ",
+              5: "</br> </br> Duplicate spouses: 67086, 17840, 19020, 25634, 5558, 42932, 13761, 50615, 28480, 61343 and 31001. </br> </br> Duplicate identification: 40788. </br> ",
               6: "</br> </br> Duplicate spouses: 4029, 4032, 55880, 66840, 20403, 21086, 24919, 45901, 37559, 38393, 62035, 30675, 56686, 22640, 47730, 67347 and 27983. </ br> </br> No relationship information: 66789, 39413, 18275 and 35985. </br> ",
               7: "</br> </br> Duplicate spouses: 41211 and 40117. </br> </br> No relationship information: 4005. </br>",
               8: "</br> </br> Duplicate spouses: 2782, 45317, 32833, 67529 and 9146. </br> </br> No relationship information: 65715. </br>",
@@ -196,28 +196,28 @@
            if (selectedFamily != 0) 
            	print++;
           
-           var datasetDirectory = "";
+           var datasetDirectory = "https://raw.githubusercontent.com/geflx/ieee-biovis2020-datavis-challenge/master/Front-end/data/families_json/";
           
            if (selectedFamily == 0) 
                data = [];
            else if (selectedFamily == 1)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_1.json";
+               datasetDirectory += "family_1.json";
            else if (selectedFamily == 2)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_2.json";
+               datasetDirectory += "family_2.json";
            else if (selectedFamily == 3)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_3.json";
+               datasetDirectory += "family_3.json";
            else if (selectedFamily == 4)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_4.json";
+               datasetDirectory += "family_4.json";
            else if (selectedFamily == 5)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_5.json";
+               datasetDirectory += "family_5.json";
            else if (selectedFamily == 6)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_6.json";
+               datasetDirectory += "family_6.json";
            else if (selectedFamily == 7)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_7.json";
+               datasetDirectory += "family_7.json";
            else if (selectedFamily == 8)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_8.json";
+               datasetDirectory += "family_8.json";
            else if (selectedFamily == 9)
-               datasetDirectory = "https://raw.githubusercontent.com/geflx/data-visualization-challenge/master/Web/data/families_json/family_9.json";
+               datasetDirectory += "family_9.json";
            
           
            d3.json(datasetDirectory).then(function(data) {
