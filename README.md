@@ -1,12 +1,12 @@
 # IEEE BioVis 2020: Data Visualization Challenge :mag_right::bar_chart:
 
-This challenge was proposed by the IEEE BioVis 2020 conference, in which the main objective was creating **a visualization tool to help health professionals** to analyse data sets of families with high incidence levels of suicide cases (from Utah - USA). In this project were proposed two approaches on a visualization tool: interactive family trees and bar graphs.
+This challenge was proposed by the IEEE BioVis 2020 conference, in which the main objective was creating **a visualization tool to help health professionals** to analyse data sets of families with high incidence levels of suicide cases (from Utah - USA). 
 
-The **D3.js framework** was chosen to develop the graphics presented in this project.
+In this project were proposed two approaches on a visualization tool: interactive family trees and bar graphs, and they were developed using the **D3.js framework**.
 
 ## Website Overview :mag_right::link:
 
-To present the tools developed in this project, a website was created where there is a presentation of the problem, description of the approaches, datasets available and the tools themselves:
+To present the tools developed in this project, a website was created showing the following steps: problem description, approaches presentation, available datasets and the tools themselves:
 
 [**Visualization Tool Website**](https://geflx.github.io/ieee-biovis2020-datavis-challenge)
 
